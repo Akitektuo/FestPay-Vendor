@@ -50,7 +50,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         holder.textProduct.setText(item.getProduct());
         holder.textPrice.setText(String.valueOf(item.getPrice()));
-        holder.textQuantity.setText(String.valueOf(item.getQuantity()));
+        holder.textQuantity.setText(String.format("x%d", item.getQuantity()));
+        holder.textTotalPrice.setText(String.valueOf(item.getTotalPrice()));
         holder.textCustomer.setText(item.getCustomer());
         holder.textTime.setText(item.getTimeAsString());
     }
@@ -66,6 +67,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         TextView textProduct;
         TextView textPrice;
         TextView textQuantity;
+        TextView textTotalPrice;
         TextView textCustomer;
         TextView textTime;
 
@@ -76,6 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             textProduct = (TextView) view.findViewById(R.id.text_history_product);
             textPrice = (TextView) view.findViewById(R.id.text_history_price);
             textQuantity = (TextView) view.findViewById(R.id.text_history_quantity);
+            textTotalPrice = (TextView) view.findViewById(R.id.text_history_total_price);
             textCustomer = (TextView) view.findViewById(R.id.text_history_customer);
             textTime = (TextView) view.findViewById(R.id.text_history_time);
         }

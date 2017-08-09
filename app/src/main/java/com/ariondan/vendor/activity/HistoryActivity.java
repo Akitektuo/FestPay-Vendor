@@ -22,10 +22,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_history);
 
         List<HistoryModel> historyModels = new ArrayList<>();
-        historyModels.add(new HistoryModel(this, 1, "", "Coca", 3.5, 1, "Gica", new Date()));
-        historyModels.add(new HistoryModel(this, 2, "", "Cola", 7, 2, "Ionel", new Date()));
-        historyModels.add(new HistoryModel(this, 3, "", "Coke", 14, 4, "Asian", new Date()));
-        historyModels.add(new HistoryModel(this, 4, "", "Mici", 5, 1, "Nicusor", new Date()));
+        historyModels.add(new HistoryModel(this, 1, "", "Coca", 3.5, 1, 3.5, "Gica", new Date()));
+        historyModels.add(new HistoryModel(this, 2, "", "Cola", 3.5, 2, 7, "Ionel", new Date()));
+        historyModels.add(new HistoryModel(this, 3, "", "Coke", 3.5, 4, 14, "Asian", new Date()));
+        historyModels.add(new HistoryModel(this, 4, "", "Mici", 5, 1, 5, "Nicusor", new Date()));
         RecyclerView listHistory = (RecyclerView) findViewById(R.id.list_history);
         listHistory.setAdapter(new HistoryAdapter(this, historyModels));
         listHistory.setLayoutManager(new LinearLayoutManager(this));

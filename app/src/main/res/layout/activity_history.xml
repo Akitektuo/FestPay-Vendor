@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.14"
             android:gravity="center"
-            android:text="@string/price"
+            android:text="@string/quantity"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.14"
             android:gravity="center"
-            android:text="@string/quantity"
+            android:text="@string/price"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
