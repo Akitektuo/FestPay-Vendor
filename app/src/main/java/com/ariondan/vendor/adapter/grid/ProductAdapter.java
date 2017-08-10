@@ -115,12 +115,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
             listCart.getAdapter().notifyDataSetChanged();
         }
-
     }
 
     private void removeItems(int count, ProductModel productModel) throws Exception {
         count--;
-        if (count < 1) {
+        if (count < 0) {
             return;
         }
         if (count == 0) {
@@ -139,7 +138,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
             listCart.getAdapter().notifyDataSetChanged();
         }
-
     }
 
     private CartModel getCartModelForId(int id) {

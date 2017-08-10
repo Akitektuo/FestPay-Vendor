@@ -72,24 +72,44 @@
         android:elevation="4dp"
         android:visibility="gone">
 
-        <Button
-            android:id="@+id/button_cart_confirm"
+        <LinearLayout
+            android:id="@+id/layout_cart_buttons"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_margin="16dp"
-            android:background="@drawable/corners_white"
-            android:text="@string/confirm"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_cart_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/corners_white"
+                android:text="@string/confirm"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_cart_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/corners_white"
+                android:text="@string/clear"
+                android:textColor="@color/colorDarkRed"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/button_cart_confirm"
+            android:layout_toStartOf="@id/layout_cart_buttons"
             android:clipToPadding="false"
             android:divider="@android:color/transparent"
             android:padding="4dp"
