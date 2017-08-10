@@ -32,7 +32,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_login:
-                logIn();
+//                logIn();
+                startActivity(new Intent(this, ProductsActivity.class));
+                finish();
                 break;
             case R.id.text_forget_password:
                 requestForgottenPassword();

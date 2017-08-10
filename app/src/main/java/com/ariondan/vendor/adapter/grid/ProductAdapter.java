@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ariondan.vendor.R;
+import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.ProductModel;
 
 import java.util.List;
@@ -23,14 +24,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     private Context context;
     private List<ProductModel> items;
+    private List<CartModel> cartModels;
     private RelativeLayout layoutCart;
+    private RecyclerView listCart;
     private int totalItems;
 
-    public ProductAdapter(Context context, RelativeLayout layoutCart, List<ProductModel> objects) {
+    public ProductAdapter(Context context, RecyclerView listCart, RelativeLayout layoutCart, List<ProductModel> objects, List<CartModel> cartModels) {
         this.context = context;
         this.layoutCart = layoutCart;
         items = objects;
         totalItems = 0;
+        this.cartModels = cartModels;
+        this.listCart = listCart;
     }
 
     @Override
@@ -42,7 +47,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ProductAdapter.ViewHolder holder, int position) {
-        ProductModel item = items.get(position);
+        final ProductModel item = items.get(position);
         holder.textProduct.setText(item.getName());
         holder.textPrice.setText(String.valueOf(item.getPrice()));
 
@@ -58,20 +63,32 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         View.OnClickListener clickAdd = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.textCount.setText(String.valueOf(Integer.parseInt(holder.textCount.getText().toString()) + 1));
+                int count = Integer.parseInt(holder.textCount.getText().toString());
+                holder.textCount.setText(String.valueOf(count + 1));
                 layoutCart.setVisibility(View.VISIBLE);
                 totalItems++;
+                try {
+                    addItems(count, item);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
-        holder.layoutProduct.setOnClickListener(clickAdd);
+        holder.imageProduct.setOnClickListener(clickAdd);
         holder.textMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Integer.parseInt(holder.textCount.getText().toString()) > 0) {
-                    holder.textCount.setText(String.valueOf(Integer.parseInt(holder.textCount.getText().toString()) - 1));
+                int count = Integer.parseInt(holder.textCount.getText().toString());
+                if (count > 0) {
+                    holder.textCount.setText(String.valueOf(count - 1));
                     totalItems--;
                     if (totalItems == 0) {
                         layoutCart.setVisibility(View.GONE);
+                    }
+                    try {
+                        removeItems(count, item);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -82,6 +99,56 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private void addItems(int count, ProductModel productModel) throws Exception {
+        count++;
+        if (count < 1) {
+            return;
+        }
+        if (count == 1) {
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            listCart.getAdapter().notifyDataSetChanged();
+        } else {
+            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
+            cartModels.remove(index);
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            listCart.getAdapter().notifyDataSetChanged();
+        }
+
+    }
+
+    private void removeItems(int count, ProductModel productModel) throws Exception {
+        count--;
+        if (count < 1) {
+            return;
+        }
+        if (count == 0) {
+            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
+            cartModels.remove(index);
+            try {
+                listCart.removeViewAt(index);
+                listCart.getAdapter().notifyItemRemoved(index);
+                listCart.getAdapter().notifyItemRangeChanged(index, cartModels.size());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else {
+            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
+            cartModels.remove(index);
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            listCart.getAdapter().notifyDataSetChanged();
+        }
+
+    }
+
+    private CartModel getCartModelForId(int id) {
+        for (CartModel x : cartModels) {
+            if (x.getId() == id) {
+                return x;
+            }
+        }
+        return null;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

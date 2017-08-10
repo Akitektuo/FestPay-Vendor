@@ -69,6 +69,7 @@
         android:layout_height="128dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
+        android:elevation="4dp"
         android:visibility="gone">
 
         <Button

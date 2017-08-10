@@ -67,10 +67,4 @@
 
     </RelativeLayout>
 
-    <Button
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/cancel" />
-
 </RelativeLayout>

@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.model.CartModel;
@@ -51,12 +49,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.textPrice.setText(String.valueOf(item.getPrice()));
         holder.textQuantity.setText(String.format("x%d", item.getQuantity()));
         holder.textTotalPrice.setText(String.valueOf(item.getTotalPrice()));
-        holder.layoutCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Soon a remove funtionality...", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -65,7 +57,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout layoutCart;
         ImageView imageProduct;
         TextView textProduct;
         TextView textPrice;
@@ -74,7 +65,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         ViewHolder(View view) {
             super(view);
-            layoutCart = (RelativeLayout) view.findViewById(R.id.layout_item_cart);
             imageProduct = (ImageView) view.findViewById(R.id.image_item_cart);
             textProduct = (TextView) view.findViewById(R.id.text_item_cart_name);
             textPrice = (TextView) view.findViewById(R.id.text_item_cart_price);

@@ -32,6 +32,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_history).setOnClickListener(this);
         gridProducts = (RecyclerView) findViewById(R.id.grid_products);
         listCart = (RecyclerView) findViewById(R.id.list_cart);
+        List<CartModel> cartModels = new ArrayList<>();
         List<ProductModel> productModels = new ArrayList<>();
         productModels.add(new ProductModel(1, "Coca", "", 2, "", "soda"));
         productModels.add(new ProductModel(2, "Cola", "", 3.5, "", "soda"));
@@ -40,12 +41,11 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         productModels.add(new ProductModel(5, "Coca-Cola", "", 5, "", "soda"));
         productModels.add(new ProductModel(6, "Mici", "", 5, "", "food"));
         gridProducts.setLayoutManager(new GridLayoutManager(this, 3));
-        gridProducts.setAdapter(new ProductAdapter(this, (RelativeLayout) findViewById(R.id.layout_cart), productModels));
-        List<CartModel> cartModels = new ArrayList<>();
-        cartModels.add(new CartModel(1, "", "Cola", 3.5, 2, 7));
-        cartModels.add(new CartModel(2, "", "Mici", 5, 1, 5));
         listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        listCart.setAdapter(new CartAdapter(this, cartModels));
+        CartAdapter cartAdapter = new CartAdapter(this, cartModels);
+        listCart.setAdapter(cartAdapter);
+        ProductAdapter productAdapter = new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels);
+        gridProducts.setAdapter(productAdapter);
     }
 
     @Override
