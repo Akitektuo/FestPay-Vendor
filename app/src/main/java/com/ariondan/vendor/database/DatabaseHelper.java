@@ -103,8 +103,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT + " LIKE ? OR " +
                 DatabaseContract.HistoryContractEntry.COLUMN_CUSTOMER + " LIKE ?";
         String[] selectionArgs = {"%" + searchField + "%", "%" + searchField + "%"};
+        String orderBy = DatabaseContract.HistoryContractEntry.COLUMN_ID + " desc";
         try {
-            return getModelForCursor(getReadableDatabase().query(DatabaseContract.HistoryContractEntry.TABLE_NAME, results, selection, selectionArgs, null, null, null));
+            return getModelForCursor(getReadableDatabase().query(DatabaseContract.HistoryContractEntry.TABLE_NAME, results, selection, selectionArgs, null, null, orderBy));
         } catch (ParseException e) {
             e.printStackTrace();
         }
