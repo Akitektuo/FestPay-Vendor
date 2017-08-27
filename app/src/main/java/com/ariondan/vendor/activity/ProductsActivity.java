@@ -17,9 +17,11 @@ import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.grid.ProductAdapter;
 import com.ariondan.vendor.adapter.list.CartAdapter;
 import com.ariondan.vendor.model.CartModel;
+import com.ariondan.vendor.model.HistoryModel;
 import com.ariondan.vendor.model.ProductModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -66,7 +68,9 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 popupFilter.show();
                 break;
             case R.id.button_cart_confirm:
-                Toast.makeText(this, "Tap the screen to cancel the connection.", Toast.LENGTH_SHORT).show();
+                for (CartModel x : cartModels) {
+                    new HistoryModel(this, x.getImage(), x.getName(), x.getPrice(), x.getQuantity(), x.getTotalPrice(), "Mister from NFC", new Date());
+                }
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:

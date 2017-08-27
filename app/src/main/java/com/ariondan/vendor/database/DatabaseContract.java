@@ -24,7 +24,7 @@ public class DatabaseContract {
         static final String COLUMN_PRODUCT = "Product";
         static final String COLUMN_PRICE = "Price";
         static final String COLUMN_QUANTITY = "Quantity";
-        static final String COLUMN_TOTAL_PRICE = "Quantity";
+        static final String COLUMN_TOTAL_PRICE = "TotalPrice";
         static final String COLUMN_CUSTOMER = "Customer";
         static final String COLUMN_TIME = "Time";
     }

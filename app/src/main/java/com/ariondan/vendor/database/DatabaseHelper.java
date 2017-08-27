@@ -37,11 +37,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DatabaseContract.HistoryContractEntry.COLUMN_ID + " NUMBER," +
             DatabaseContract.HistoryContractEntry.COLUMN_PICTURE + " TEXT," +
             DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT + " TEXT," +
-            DatabaseContract.HistoryContractEntry.COLUMN_PRICE + "TEXT," +
-            DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY + "NUMBER," +
-            DatabaseContract.HistoryContractEntry.COLUMN_TOTAL_PRICE + "TEXT," +
+            DatabaseContract.HistoryContractEntry.COLUMN_PRICE + " TEXT," +
+            DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY + " NUMBER," +
+            DatabaseContract.HistoryContractEntry.COLUMN_TOTAL_PRICE + " TEXT," +
             DatabaseContract.HistoryContractEntry.COLUMN_CUSTOMER + " TEXT," +
-            DatabaseContract.HistoryContractEntry.COLUMN_TIME + "TEXT);";
+            DatabaseContract.HistoryContractEntry.COLUMN_TIME + " TEXT);";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
