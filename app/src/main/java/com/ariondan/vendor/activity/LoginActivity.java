@@ -9,6 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -16,6 +22,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private MaterialEditText editEmail;
     private MaterialEditText editPassword;
+    private String emailResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editPassword = (MaterialEditText) findViewById(R.id.edit_login_password);
         findViewById(R.id.button_login).setOnClickListener(this);
         findViewById(R.id.text_forget_password).setOnClickListener(this);
+
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
@@ -72,11 +82,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(LoginActivity.this, "Field was empty.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (email.contains("@")) {
-                        if (email.equals("admin@gmail.com")) {
-                            Toast.makeText(LoginActivity.this, "E-mail has been sent.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Wrong e-mail.", Toast.LENGTH_SHORT).show();
-                        }
+                        sendRequest(email);
+//                        if (email.equals("admin@gmail.com")) {
+//                            Toast.makeText(LoginActivity.this, "E-mail has been sent.", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(LoginActivity.this, "Wrong e-mail.", Toast.LENGTH_SHORT).show();
+//                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid e-mail.", Toast.LENGTH_SHORT).show();
                     }
@@ -93,6 +104,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         alertDialog.show();
+    }
+
+    private void sendRequest(String email) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://festpay.azurewebsites.net/api/user/passwordForgotten?email=" + email;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        emailResponse = response;
+                        Toast.makeText(getBaseContext(), response, Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        queue.add(stringRequest);
     }
 
 }
