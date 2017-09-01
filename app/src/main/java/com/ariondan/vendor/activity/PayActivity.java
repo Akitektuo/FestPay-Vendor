@@ -1,6 +1,8 @@
 package com.ariondan.vendor.activity;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
@@ -10,6 +12,7 @@ import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -18,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ariondan.vendor.R;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import be.appfoundry.nfclibrary.exceptions.InsufficientCapacityException;
 import be.appfoundry.nfclibrary.exceptions.ReadOnlyTagException;
@@ -97,9 +101,43 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         SparseArray<String> res = new NfcReadUtilityImpl().readFromTagWithSparseArray(intent);
+        String answer = "";
         for (int i = 0; i < res.size(); i++) {
+            answer += res.valueAt(i);
             Toast.makeText(this, res.valueAt(i), Toast.LENGTH_SHORT).show();
         }
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        final View viewDialog = LayoutInflater.from(this).inflate(R.layout.dialog_forgotten_password, null);
+//        builder.setView(viewDialog);
+//        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String email = ((MaterialEditText) viewDialog.findViewById(R.id.edit_dialog_email)).getText().toString();
+//                if (email.isEmpty()) {
+//                    Toast.makeText(PayActivity.this, "Field was empty.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    if (email.contains("@")) {
+//                        if (email.equals("admin@gmail.com")) {
+//                            Toast.makeText(PayActivity.this, "E-mail has been sent.", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(PayActivity.this, "Wrong e-mail.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    } else {
+//                        Toast.makeText(PayActivity.this, "Invalid e-mail.", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", null);
+//        final AlertDialog alertDialog = builder.create();
+//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialogInterface) {
+//                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+//            }
+//        });
+//        alertDialog.show();
     }
 
     @Override

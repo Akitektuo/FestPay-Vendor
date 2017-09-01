@@ -9,14 +9,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.R;
+import com.ariondan.vendor.model.LoginModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.io.UnsupportedEncodingException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.button_login:
 //                logIn();
+                sendLoginRequest("admin@gmail.com", "parola");
                 startActivity(new Intent(this, ProductsActivity.class));
                 finish();
                 break;
@@ -122,6 +130,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         queue.add(stringRequest);
+    }
+
+    private void sendLoginRequest(String email, String password) {
+        LoginModel login = new LoginModel(email, password);
+        try {
+            final String json = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(login);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "http://festpay.azurewebsites.net/api/user/logIn";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    System.out.println(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return json == null ? null : json.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", json, "utf-8");
+                        return null;
+                    }
+                }
+            };
+            queue.add(stringRequest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
