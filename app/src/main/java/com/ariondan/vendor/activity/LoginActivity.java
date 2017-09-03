@@ -3,10 +3,12 @@ package com.ariondan.vendor.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.network.NetworkManager;
@@ -19,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private MaterialEditText editPassword;
     private NetworkManager network;
 
+    private ImageView imageTest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.text_forget_password).setOnClickListener(this);
 
         network = new NetworkManager(this);
+
+        imageTest = (ImageView) findViewById(R.id.image_test);
+        network.loadImageTest();
+        imageTest.setVisibility(View.GONE);
 
     }
 
@@ -55,6 +63,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void passwordForgotten() {
 
+    }
+
+    @Override
+    public void loadImage(Bitmap bitmap) {
+        imageTest.setImageBitmap(bitmap);
     }
 
     private void forgottenPasswordAlert() {
