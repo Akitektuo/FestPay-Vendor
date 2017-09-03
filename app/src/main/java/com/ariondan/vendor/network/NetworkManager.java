@@ -18,8 +18,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.UnsupportedEncodingException;
 
+/*
+  Created by AoD Akitektuo on 03-Sep-17 at 19:45.
+ */
+
 /**
- * Created by AoD Akitektuo on 03-Sep-17 at 19:45.
+ * If you have a lot of errors make sure you added the right dependency in the gradle file:
+ * compile 'com.android.volley:volley:1.0.0'
+ * compile (
+ * [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
+ * )
  */
 
 public class NetworkManager {
