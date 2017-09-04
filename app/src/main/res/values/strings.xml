@@ -8,7 +8,7 @@
     <string name="forgotten_password_aware">An e-mail with the password will be sent to your address.</string>
     <string name="search">Search</string>
     <string name="order">Order</string>
-    <string name="picture">Picture</string>
+    <string name="imageName">Picture</string>
     <string name="name">Name</string>
     <string name="price">Price</string>
     <string name="quantity">Quantity</string>

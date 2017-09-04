@@ -1,9 +1,17 @@
 package com.ariondan.vendor.model;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.ariondan.vendor.database.DatabaseHelper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,10 +21,9 @@ import java.util.Date;
 
 public class HistoryModel {
 
-    //TODO: Insert history when object is created AND make a method getEntireHistory() which returns a List<History>
-
     private int id;
-    private String picture;
+    private String imageName;
+    private Bitmap image;
     private String product;
     private double price;
     private int quantity;
@@ -24,35 +31,20 @@ public class HistoryModel {
     private String customer;
     private Date time;
 
-    private DatabaseHelper database;
     private Context context;
 
-    public HistoryModel(Context context) {
+    public HistoryModel(Context context, Bitmap image, String product, double price, int quantity, double totalPrice, String customer, Date time) {
         setContext(context);
-        database = new DatabaseHelper(context);
+        DatabaseHelper database = new DatabaseHelper(context);
+        String imageName = "image" + database.getHistory().size();
+        setImage(image);
+        saveImage(imageName);
+        database.addHistory(imageName, product, price, quantity, totalPrice, customer, time);
     }
 
-    public HistoryModel(Context context, String picture, String product, double price, int quantity, double totalPrice, String customer, Date time) {
-        setContext(context);
-        database = new DatabaseHelper(context);
-        database.addHistory(picture, product, price, quantity, totalPrice, customer, time);
-    }
-
-    public HistoryModel(int id, String picture, String product, double price, int quantity, double totalPrice, String customer, Date time) {
+    public HistoryModel(int id, String imageName, String product, double price, int quantity, double totalPrice, String customer, Date time) {
         setId(id);
-        setPicture(picture);
-        setProduct(product);
-        setPrice(price);
-        setQuantity(quantity);
-        setTotalPrice(totalPrice);
-        setCustomer(customer);
-        setTime(time);
-    }
-
-    public HistoryModel(Context context, int id, String picture, String product, double price, int quantity, double totalPrice, String customer, Date time) {
-        setContext(context);
-        setId(id);
-        setPicture(picture);
+        setImage(getImage(imageName));
         setProduct(product);
         setPrice(price);
         setQuantity(quantity);
@@ -106,12 +98,12 @@ public class HistoryModel {
         this.product = product;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public int getId() {
@@ -137,4 +129,46 @@ public class HistoryModel {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public void saveImage(String name) {
+        ContextWrapper cw = new ContextWrapper(getContext());
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        File myPath = new File(directory, name + ".jpg");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(myPath);
+            getImage().compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert fos != null;
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Bitmap getImage(String name) {
+        Bitmap bitmap = null;
+        ContextWrapper cw = new ContextWrapper(getContext());
+        File directory = cw.getDir("images", Context.MODE_PRIVATE);
+        try {
+            File f = new File(directory, name + ".jpg");
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
 }

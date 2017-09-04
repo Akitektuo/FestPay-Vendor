@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.14"
             android:gravity="center"
-            android:text="@string/picture"
+            android:text="@string/imageName"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
