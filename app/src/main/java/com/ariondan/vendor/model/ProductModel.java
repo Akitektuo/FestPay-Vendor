@@ -1,5 +1,10 @@
 package com.ariondan.vendor.model;
 
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by AoD Akitektuo on 30-Jul-17 at 02:52.
  */
@@ -7,18 +12,31 @@ package com.ariondan.vendor.model;
 public class ProductModel {
     private int id;
     private String name;
-    private String image;
+    private String imageURL;
+    private Bitmap image;
     private double price;
     private String description;
     private String category;
 
-    public ProductModel(int id, String name, String image, double price, String description, String category) {
+    public ProductModel(int id, String name, String imageURL, double price, String description, String category) {
         setId(id);
         setName(name);
-        setImage(image);
+        setImageURL(imageURL);
         setPrice(price);
         setDescription(description);
         setCategory(category);
+    }
+
+    public static List<ProductModel> convertProducts(List<ProductNetworkModel> products) {
+        List<ProductModel> results = new ArrayList<>();
+        for (ProductNetworkModel product : products) {
+            results.add(convertProduct(product));
+        }
+        return results;
+    }
+
+    public static ProductModel convertProduct(ProductNetworkModel product) {
+        return new ProductModel(product.getId(), product.getName(), product.getImageURL(), product.getPrice(), product.getDescription(), product.getCategory());
     }
 
     public int getId() {
@@ -37,12 +55,12 @@ public class ProductModel {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public double getPrice() {
@@ -67,5 +85,13 @@ public class ProductModel {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }

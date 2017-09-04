@@ -15,10 +15,14 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.model.LoginModel;
+import com.ariondan.vendor.model.ProductModel;
+import com.ariondan.vendor.model.ProductNetworkModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /*
   Created by AoD Akitektuo on 03-Sep-17 at 19:45.
@@ -36,13 +40,18 @@ public class NetworkManager {
 
     private static final String HOST = "http://festpay.azurewebsites.net/api/";
     private static final String HOST_USER = HOST + "user/";
+    private static final String HOST_PRODUCT = HOST + "product/";
 
     private Context context;
-    private UserResponse notifier;
+    private UserResponse userResponse;
+    private ProductResponse productResponse;
+    private RequestQueue queue;
 
     public NetworkManager(Activity activity) {
         setContext(activity);
-        setNotifier((UserResponse) activity);
+        setUserResponse((UserResponse) activity);
+        setProductResponse((ProductResponse) activity);
+        queue = Volley.newRequestQueue(getContext());
     }
 
     public void logIn(String email, String password) {
@@ -50,7 +59,6 @@ public class NetworkManager {
             Toast.makeText(getContext(), "Fill in all fields.", Toast.LENGTH_SHORT).show();
         } else {
             if (email.contains("@")) {
-                RequestQueue queue = Volley.newRequestQueue(getContext());
                 String url = HOST_USER + "logIn";
                 try {
                     final String json = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(new LoginModel(email, password));
@@ -58,7 +66,7 @@ public class NetworkManager {
                         @Override
                         public void onResponse(String response) {
                             if (Boolean.parseBoolean(response)) {
-                                getNotifier().logIn();
+                                getUserResponse().logIn();
                             } else {
                                 Toast.makeText(getContext(), "Wrong credentials.", Toast.LENGTH_SHORT).show();
                             }
@@ -99,14 +107,13 @@ public class NetworkManager {
             Toast.makeText(getContext(), "Field was empty.", Toast.LENGTH_SHORT).show();
         } else {
             if (email.contains("@")) {
-                RequestQueue queue = Volley.newRequestQueue(getContext());
                 String url = HOST_USER + "passwordForgotten?email=" + email;
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 if (Boolean.parseBoolean(response)) {
-                                    getNotifier().passwordForgotten();
+                                    getUserResponse().passwordForgotten();
                                 } else {
                                     Toast.makeText(getContext(), "Wrong e-mail.", Toast.LENGTH_SHORT).show();
                                 }
@@ -123,13 +130,75 @@ public class NetworkManager {
         }
     }
 
+    public void getProducts(String vendor) {
+        String url = HOST_PRODUCT + "products?vendor=" + vendor;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
+                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void getProducts(String vendor, String search) {
+        String url = HOST_PRODUCT + "products?vendor=" + vendor + "&search=" + search;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
+                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void getProducts(String vendor, String search, String category) {
+        String url = HOST_PRODUCT + "products?vendor=" + vendor + "&search=" + search + "&category=" + category;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
+                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(stringRequest);
+    }
+
     public void loadImageTest() {
-        RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = "http://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/taking_care_of_kitten_slideshow/photolibrary_rm_photo_of_kitten_in_grass.jpg";
         ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                getNotifier().loadImage(response);
+                getUserResponse().loadImage(response);
             }
         }, 0, 0, null, new Response.ErrorListener() {
             @Override
@@ -148,11 +217,19 @@ public class NetworkManager {
         this.context = context;
     }
 
-    private UserResponse getNotifier() {
-        return notifier;
+    private UserResponse getUserResponse() {
+        return userResponse;
     }
 
-    private void setNotifier(UserResponse notifier) {
-        this.notifier = notifier;
+    private void setUserResponse(UserResponse userResponse) {
+        this.userResponse = userResponse;
+    }
+
+    private ProductResponse getProductResponse() {
+        return productResponse;
+    }
+
+    private void setProductResponse(ProductResponse productResponse) {
+        this.productResponse = productResponse;
     }
 }

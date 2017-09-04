@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.ProductModel;
@@ -28,6 +30,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     private RelativeLayout layoutCart;
     private RecyclerView listCart;
     private int totalItems;
+    private RequestQueue queue;
 
     public ProductAdapter(Context context, RecyclerView listCart, RelativeLayout layoutCart, List<ProductModel> objects, List<CartModel> cartModels) {
         this.context = context;
@@ -36,6 +39,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         totalItems = 0;
         this.cartModels = cartModels;
         this.listCart = listCart;
+        queue = Volley.newRequestQueue(context);
     }
 
     @Override
@@ -51,8 +55,23 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         holder.textProduct.setText(item.getName());
         holder.textPrice.setText(String.valueOf(item.getPrice()));
 
-        //TODO: get image by name from stream (from server)
-//        holder.imageProduct.setImageBitmap();
+        //TODO: get image by name from network
+//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.loading));
+//        ImageRequest request = new ImageRequest(item.getImageURL(), new Response.Listener<Bitmap>() {
+//            @Override
+//            public void onResponse(Bitmap response) {
+//                holder.imageProduct.setImageBitmap(response);
+//                ProductModel model = items.get(holder.getAdapterPosition());
+//                model.setImage(response);
+//                items.set(holder.getAdapterPosition(), model);
+//            }
+//        }, 0, 0, null, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//        queue.add(request);
 
         //delete this part when introducing streaming
         holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
