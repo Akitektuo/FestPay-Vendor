@@ -1,6 +1,7 @@
 package com.ariondan.vendor.adapter.grid;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.model.CartModel;
@@ -56,28 +60,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         holder.textPrice.setText(String.valueOf(item.getPrice()));
 
         //TODO: get image by name from network
-//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.loading));
-//        ImageRequest request = new ImageRequest(item.getImageURL(), new Response.Listener<Bitmap>() {
-//            @Override
-//            public void onResponse(Bitmap response) {
-//                holder.imageProduct.setImageBitmap(response);
-//                ProductModel model = items.get(holder.getAdapterPosition());
-//                model.setImage(response);
-//                items.set(holder.getAdapterPosition(), model);
-//            }
-//        }, 0, 0, null, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//        queue.add(request);
+        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.loading));
+        ImageRequest request = new ImageRequest(item.getImageURL(), new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                holder.imageProduct.setImageBitmap(response);
+                ProductModel model = items.get(holder.getAdapterPosition());
+                model.setImage(response);
+                items.set(holder.getAdapterPosition(), model);
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(request);
 
         //delete this part when introducing streaming
-        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
-        if (item.getName().equals("Mici")) {
-            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
-        }
+//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
+//        if (item.getName().equals("Mici")) {
+//            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
+//        }
 
         View.OnClickListener clickAdd = new View.OnClickListener() {
             @Override

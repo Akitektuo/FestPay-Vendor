@@ -40,13 +40,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.textNumber.setText(String.format("%d.", item.getId()));
 
         //TODO: get image by name from internal storage
-//        holder.imageProduct.setImageBitmap(item.getImage());
+        holder.imageProduct.setImageBitmap(item.getImage());
 
         //delete this part when introducing local db
-        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
-        if (item.getProduct().equals("Mici")) {
-            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
-        }
+//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
+//        if (item.getProduct().equals("Mici")) {
+//            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
+//        }
 
         holder.textProduct.setText(item.getProduct());
         holder.textPrice.setText(String.valueOf(item.getPrice()));

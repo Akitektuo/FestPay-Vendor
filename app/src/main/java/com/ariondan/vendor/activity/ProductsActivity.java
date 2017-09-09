@@ -9,6 +9,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -19,20 +20,27 @@ import com.ariondan.vendor.adapter.list.CartAdapter;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.HistoryModel;
 import com.ariondan.vendor.model.ProductModel;
+import com.ariondan.vendor.network.NetworkManager;
+import com.ariondan.vendor.network.ProductResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
 
-public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
+public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
+
+    private static final String VENDOR = "Pancake House";
     private RecyclerView gridProducts;
     private RecyclerView listCart;
     private List<CartModel> cartModels;
     private List<ProductModel> productModels;
     private RelativeLayout layoutCart;
     private PopupMenu popupFilter;
+    private NetworkManager network;
+    private AutoCompleteTextView editAutoSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +50,23 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_history).setOnClickListener(this);
         findViewById(R.id.button_cart_confirm).setOnClickListener(this);
         findViewById(R.id.button_cart_clear).setOnClickListener(this);
+        findViewById(R.id.button_search).setOnClickListener(this);
+        editAutoSearch = (AutoCompleteTextView) findViewById(R.id.edit_auto_search);
         Button buttonFilter = (Button) findViewById(R.id.button_filter);
         buttonFilter.setOnClickListener(this);
         layoutCart = (RelativeLayout) findViewById(R.id.layout_cart);
         gridProducts = (RecyclerView) findViewById(R.id.grid_products);
         listCart = (RecyclerView) findViewById(R.id.list_cart);
         popupFilter = new PopupMenu(this, buttonFilter);
-        popupFilter.getMenu().add("Soda");
-        popupFilter.getMenu().add("Food");
         popupFilter.setOnMenuItemClickListener(this);
-        refreshPage();
+        cartModels = new ArrayList<>();
+        productModels = new ArrayList<>();
+        network = new NetworkManager(this, KEY_PRODUCT);
+        gridProducts.setLayoutManager(new GridLayoutManager(this, 3));
+        listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        listCart.setAdapter(new CartAdapter(this, cartModels));
+        gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
+//        network.getProducts(VENDOR);
     }
 
     @Override
@@ -67,6 +82,9 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.button_filter:
                 popupFilter.show();
                 break;
+            case R.id.button_search:
+//                network.getProducts(VENDOR, editAutoSearch.getText().toString());
+                break;
             case R.id.button_cart_confirm:
                 for (CartModel x : cartModels) {
                     new HistoryModel(this, x.getImage(), x.getName(), x.getPrice(), x.getQuantity(), x.getTotalPrice(), "Mister from NFC", new Date());
@@ -74,31 +92,50 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                refreshPage();
+                layoutCart.setVisibility(View.GONE);
+                productModels.clear();
+                cartModels.clear();
+//                network.getProducts(VENDOR);
                 break;
         }
     }
 
-    private void refreshPage() {
-        layoutCart.setVisibility(View.GONE);
-        cartModels = new ArrayList<>();
-        productModels = new ArrayList<>();
-        productModels.add(new ProductModel(1, "Coca", "", 2, "", "soda"));
-        productModels.add(new ProductModel(2, "Cola", "", 3.5, "", "soda"));
-        productModels.add(new ProductModel(3, "Coke", "", 100, "", "soda"));
-        productModels.add(new ProductModel(4, "Big Cola", "", 7.5, "", "soda"));
-        productModels.add(new ProductModel(5, "Coca-Cola", "", 5, "", "soda"));
-        productModels.add(new ProductModel(6, "Mici", "", 5, "", "food"));
-        gridProducts.setLayoutManager(new GridLayoutManager(this, 3));
-        listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        listCart.setAdapter(new CartAdapter(this, cartModels));
-        gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getTitle().toString().equals("Clear")) {
+            productModels.clear();
+        } else {
+            network.getProducts(VENDOR, editAutoSearch.getText().toString(), item.getTitle().toString());
+        }
+        return true;
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        Toast.makeText(this, "This will do stuff.", Toast.LENGTH_SHORT).show();
-        return true;
+    public void loadProducts(List<ProductModel> productModels) {
+        populatePopup(productModels);
+        Toast.makeText(this, "It connects with " + productModels.size() + " results", Toast.LENGTH_SHORT).show();
+        for (ProductModel product : productModels) {
+            this.productModels.add(product);
+            if (gridProducts.getAdapter() != null) {
+                gridProducts.getAdapter().notifyDataSetChanged();
+            }
+        }
+    }
+
+    private void populatePopup(List<ProductModel> productModels) {
+        boolean misses;
+        for (ProductModel product : productModels) {
+            misses = true;
+            for (int i = 0; i < popupFilter.getMenu().size(); i++) {
+                if (popupFilter.getMenu().getItem(i).getTitle().toString().equals(product.getName())) {
+                    misses = false;
+                }
+            }
+            if (misses) {
+                popupFilter.getMenu().add(product.getName());
+            }
+        }
+        popupFilter.getMenu().add("Clear");
     }
 }
 

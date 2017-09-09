@@ -10,8 +10,8 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp">
 
-        <EditText
-            android:id="@+id/edit_search"
+        <AutoCompleteTextView
+            android:id="@+id/edit_auto_search"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -25,7 +25,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_margin="10dp"
-            android:layout_toEndOf="@id/edit_search"
+            android:layout_toEndOf="@id/edit_auto_search"
             android:background="@drawable/search" />
 
         <Button

@@ -38,13 +38,11 @@ import java.util.List;
 
 public class NetworkManager {
 
+    public static final int KEY_USER = 0;
+    public static final int KEY_PRODUCT = 1;
     private static final String HOST = "http://festpay.azurewebsites.net/api/";
     private static final String HOST_USER = HOST + "user/";
     private static final String HOST_PRODUCT = HOST + "product/";
-
-    public static final int KEY_USER = 0;
-    public static final int KEY_PRODUCT = 1;
-
     private Context context;
     private UserResponse userResponse;
     private ProductResponse productResponse;
@@ -141,12 +139,14 @@ public class NetworkManager {
     }
 
     public void getProducts(String vendor) {
-        String url = HOST_PRODUCT + "products?vendor=" + vendor;
+        String url = HOST_PRODUCT + "products"; //?vendor=" + vendor.replaceAll(" ", "%20");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
+                    System.out.println(response);
+                    System.out.println(new ObjectMapper().reader().readValue(response));
                     getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
                 } catch (IOException e) {
                     e.printStackTrace();
