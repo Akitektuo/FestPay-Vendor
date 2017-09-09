@@ -42,15 +42,24 @@ public class NetworkManager {
     private static final String HOST_USER = HOST + "user/";
     private static final String HOST_PRODUCT = HOST + "product/";
 
+    public static final int KEY_USER = 0;
+    public static final int KEY_PRODUCT = 1;
+
     private Context context;
     private UserResponse userResponse;
     private ProductResponse productResponse;
     private RequestQueue queue;
 
-    public NetworkManager(Activity activity) {
+    public NetworkManager(Activity activity, int type) {
         setContext(activity);
-        setUserResponse((UserResponse) activity);
-        setProductResponse((ProductResponse) activity);
+        switch (type) {
+            case 0:
+                setUserResponse((UserResponse) activity);
+                break;
+            case 1:
+                setProductResponse((ProductResponse) activity);
+                break;
+        }
         queue = Volley.newRequestQueue(getContext());
     }
 
@@ -62,6 +71,7 @@ public class NetworkManager {
                 String url = HOST_USER + "logIn";
                 try {
                     final String json = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(new LoginModel(email, password));
+                    System.out.println(json);
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

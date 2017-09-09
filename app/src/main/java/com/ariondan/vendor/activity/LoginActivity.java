@@ -15,6 +15,8 @@ import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.UserResponse;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import static com.ariondan.vendor.network.NetworkManager.KEY_USER;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, UserResponse {
 
     private MaterialEditText editEmail;
@@ -33,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.button_login).setOnClickListener(this);
         findViewById(R.id.text_forget_password).setOnClickListener(this);
 
-        network = new NetworkManager(this);
+        network = new NetworkManager(this, KEY_USER);
 
         imageTest = (ImageView) findViewById(R.id.image_test);
         network.loadImageTest();
