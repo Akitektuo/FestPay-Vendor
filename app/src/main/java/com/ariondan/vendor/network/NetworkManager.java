@@ -29,11 +29,7 @@ import java.util.List;
  */
 
 /**
- * If you have a lot of errors make sure you added the right dependency in the gradle file:
- * compile 'com.android.volley:volley:1.0.0'
- * compile (
- * [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
- * )
+ * If you have a lot of errors make sure you added the right dependencies in gradle
  */
 
 public class NetworkManager {

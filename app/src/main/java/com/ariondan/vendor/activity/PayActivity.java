@@ -1,18 +1,18 @@
 package com.ariondan.vendor.activity;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -21,17 +21,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ariondan.vendor.R;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
-import be.appfoundry.nfclibrary.exceptions.InsufficientCapacityException;
-import be.appfoundry.nfclibrary.exceptions.ReadOnlyTagException;
-import be.appfoundry.nfclibrary.exceptions.TagNotPresentException;
-import be.appfoundry.nfclibrary.tasks.interfaces.AsyncOperationCallback;
-import be.appfoundry.nfclibrary.utilities.interfaces.NfcWriteUtility;
+import java.util.ArrayList;
+import java.util.List;
+
 import be.appfoundry.nfclibrary.utilities.sync.NfcReadUtilityImpl;
 import me.alexrs.wavedrawable.WaveDrawable;
 
-public class PayActivity extends AppCompatActivity implements View.OnClickListener, AsyncOperationCallback {
+public class PayActivity extends AppCompatActivity implements View.OnClickListener, NfcAdapter.CreateNdefMessageCallback {
 
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
@@ -65,6 +62,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(this, "Your phone does not have NFC.", Toast.LENGTH_SHORT).show();
         } else if (nfcAdapter.isEnabled()) {
             Toast.makeText(this, "NFC turned on.", Toast.LENGTH_SHORT).show();
+            nfcAdapter.setNdefPushMessageCallback(this, this);
             //do the transaction
         } else {
             Toast.makeText(this, "NFC turned off.", Toast.LENGTH_SHORT).show();
@@ -100,48 +98,34 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         SparseArray<String> res = new NfcReadUtilityImpl().readFromTagWithSparseArray(intent);
-        String answer = "";
         for (int i = 0; i < res.size(); i++) {
-            answer += res.valueAt(i);
-            Toast.makeText(this, res.valueAt(i), Toast.LENGTH_SHORT).show();
+            System.out.println("Intent with Sparse Array");
+            System.out.println(res.get(i));
         }
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        final View viewDialog = LayoutInflater.from(this).inflate(R.layout.dialog_forgotten_password, null);
-//        builder.setView(viewDialog);
-//        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                String email = ((MaterialEditText) viewDialog.findViewById(R.id.edit_dialog_email)).getText().toString();
-//                if (email.isEmpty()) {
-//                    Toast.makeText(PayActivity.this, "Field was empty.", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    if (email.contains("@")) {
-//                        if (email.equals("admin@gmail.com")) {
-//                            Toast.makeText(PayActivity.this, "E-mail has been sent.", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(PayActivity.this, "Wrong e-mail.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {
-//                        Toast.makeText(PayActivity.this, "Invalid e-mail.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
-//        builder.setNegativeButton("Cancel", null);
-//        final AlertDialog alertDialog = builder.create();
-//        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialogInterface) {
-//                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
-//                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
-//            }
-//        });
-//        alertDialog.show();
+
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+            List<Parcelable> rawMessages = intent.getParcelableArrayListExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            if (rawMessages != null) {
+                List<NdefMessage> messages = new ArrayList<>();
+                for (Parcelable rawMessage : rawMessages) {
+                    messages.add((NdefMessage) rawMessage);
+                }
+                for (NdefMessage message : messages) {
+                    System.out.println("Intent with Sparse Array");
+                    System.out.println(message.toString());
+                    System.out.println(new String(message.getRecords()[0].getPayload()));
+                }
+            }
+        }
     }
 
     @Override
-    public boolean performWrite(NfcWriteUtility nfcWriteUtility) throws ReadOnlyTagException, InsufficientCapacityException, TagNotPresentException, FormatException {
-        return nfcWriteUtility.writeTextToTagFromIntent("Testing, lol", getIntent());
+    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
+        String text = "Beam me up, Android! Beam Time: " + System.currentTimeMillis();
+        return new NdefMessage(new NdefRecord[]{
+                NdefRecord.createMime("text/plain", text.getBytes())
+        });
     }
 }
