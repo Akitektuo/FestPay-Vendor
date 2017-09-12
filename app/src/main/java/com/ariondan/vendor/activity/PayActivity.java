@@ -100,11 +100,12 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         super.onNewIntent(intent);
 
         SparseArray<String> res = new NfcReadUtilityImpl().readFromTagWithSparseArray(intent);
+        String sparseArray = "Intent with Sparse Array";
         for (int i = 0; i < res.size(); i++) {
-            System.out.println("Intent with Sparse Array");
-            System.out.println(res.get(i));
+            sparseArray += "\n" + res.get(i);
         }
-
+        Toast.makeText(this, sparseArray, Toast.LENGTH_LONG).show();
+        String secondTest = "SecondTest";
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             List<Parcelable> rawMessages = intent.getParcelableArrayListExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             if (rawMessages != null) {
@@ -113,12 +114,14 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                     messages.add((NdefMessage) rawMessage);
                 }
                 for (NdefMessage message : messages) {
-                    System.out.println("Intent with Sparse Array");
                     System.out.println(message.toString());
+                    secondTest += "\n" + message.toString();
                     System.out.println(new String(message.getRecords()[0].getPayload()));
+                    secondTest += "\n" + new String(message.getRecords()[0].getPayload());
                 }
             }
         }
+        Toast.makeText(this, secondTest, Toast.LENGTH_LONG).show();
     }
 
     @Override
