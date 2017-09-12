@@ -18,16 +18,15 @@ import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.grid.ProductAdapter;
 import com.ariondan.vendor.adapter.list.CartAdapter;
 import com.ariondan.vendor.model.CartModel;
-import com.ariondan.vendor.model.HistoryModel;
 import com.ariondan.vendor.model.ProductModel;
 import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.ProductResponse;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
+import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
 
 
 public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
@@ -86,9 +85,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 //                network.getProducts(VENDOR, editAutoSearch.getText().toString());
                 break;
             case R.id.button_cart_confirm:
-                for (CartModel x : cartModels) {
-                    new HistoryModel(this, x.getImage(), x.getName(), x.getPrice(), x.getQuantity(), x.getTotalPrice(), "Mister from NFC", new Date());
-                }
+                cartObjects = cartModels;
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
@@ -98,6 +95,15 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 //                network.getProducts(VENDOR);
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        layoutCart.setVisibility(View.GONE);
+        productModels.clear();
+        cartModels.clear();
+//                network.getProducts(VENDOR);
     }
 
     @Override
