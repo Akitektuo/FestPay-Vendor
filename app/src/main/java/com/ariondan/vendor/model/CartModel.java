@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
  */
 
 public class CartModel {
+
     private int id;
     private Bitmap image;
     private String name;

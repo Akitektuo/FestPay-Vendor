@@ -14,14 +14,17 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.LoginModel;
 import com.ariondan.vendor.model.ProductModel;
 import com.ariondan.vendor.model.ProductNetworkModel;
+import com.ariondan.vendor.model.TransactionModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -36,12 +39,14 @@ public class NetworkManager {
 
     public static final int KEY_USER = 0;
     public static final int KEY_PRODUCT = 1;
+    public static final int KEY_TRANSACTION = 2;
     private static final String HOST = "http://festpay.azurewebsites.net/api/";
     private static final String HOST_USER = HOST + "user/";
     private static final String HOST_PRODUCT = HOST + "product/";
     private Context context;
     private UserResponse userResponse;
     private ProductResponse productResponse;
+    private TransactionResponse transactionResponse;
     private RequestQueue queue;
 
     public NetworkManager(Activity activity, int type) {
@@ -52,6 +57,9 @@ public class NetworkManager {
                 break;
             case 1:
                 setProductResponse((ProductResponse) activity);
+                break;
+            case 2:
+                setTransactionResponse((TransactionResponse) activity);
                 break;
         }
         queue = Volley.newRequestQueue(getContext());
@@ -199,6 +207,53 @@ public class NetworkManager {
         queue.add(stringRequest);
     }
 
+    public void doTransaction(List<CartModel> cartModels, int vendorId, int customerId) {
+        String url = HOST_PRODUCT + "transaction";
+        List<Integer> productIds = new ArrayList<>();
+        for (CartModel product : cartModels) {
+            for (int i = 0; i < product.getQuantity(); i++) {
+                productIds.add(product.getId());
+            }
+        }
+        try {
+            final String json = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(new TransactionModel(productIds, vendorId, customerId));
+            System.out.println(json);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (Boolean.parseBoolean(response)) {
+                        getTransactionResponse().onTransaction();
+                    } else {
+                        Toast.makeText(getContext(), "Error occurred while making the transaction.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return json == null ? null : json.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", json, "utf-8");
+                        return null;
+                    }
+                }
+            };
+            queue.add(stringRequest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadImageTest() {
         String url = "http://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/taking_care_of_kitten_slideshow/photolibrary_rm_photo_of_kitten_in_grass.jpg";
         ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
@@ -237,5 +292,13 @@ public class NetworkManager {
 
     private void setProductResponse(ProductResponse productResponse) {
         this.productResponse = productResponse;
+    }
+
+    private TransactionResponse getTransactionResponse() {
+        return transactionResponse;
+    }
+
+    private void setTransactionResponse(TransactionResponse transactionResponse) {
+        this.transactionResponse = transactionResponse;
     }
 }
