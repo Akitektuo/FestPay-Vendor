@@ -208,7 +208,7 @@ public class NetworkManager {
     }
 
     public void doTransaction(List<CartModel> cartModels, int vendorId, int customerId) {
-        String url = HOST_PRODUCT + "transaction";
+        String url = HOST_PRODUCT + "pay";
         List<Integer> productIds = new ArrayList<>();
         for (CartModel product : cartModels) {
             for (int i = 0; i < product.getQuantity(); i++) {
