@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.ariondan.vendor.util.ObjectPasser.VENDOR;
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
+import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
 public class TransactionActivity extends AppCompatActivity implements TransactionResponse, NfcAdapter.CreateNdefMessageCallback {
 
@@ -82,7 +82,7 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String message = credits + "_;_" + codifyProducts() + "_;_" + VENDOR;
+        String message = credits + "_;_" + codifyProducts() + "_;_" + vendor;
         NdefRecord ndefRecord = NdefRecord.createMime("text/plain", message.getBytes());
         return new NdefMessage(ndefRecord);
     }

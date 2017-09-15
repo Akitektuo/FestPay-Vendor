@@ -16,7 +16,8 @@ import com.ariondan.vendor.network.UserResponse;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_USER;
-import static com.ariondan.vendor.util.ObjectPasser.VENDOR;
+import static com.ariondan.vendor.util.ObjectPasser.id;
+import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, UserResponse {
 
@@ -57,8 +58,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void logIn() {
-        VENDOR = "Pancake House";
+    public void logIn(int vendorId, String vendorName) {
+        id = vendorId;
+        vendor = vendorName;
         startActivity(new Intent(this, ProductsActivity.class));
         finish();
 

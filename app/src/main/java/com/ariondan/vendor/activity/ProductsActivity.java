@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
-import static com.ariondan.vendor.util.ObjectPasser.VENDOR;
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
+import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
 
 public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
@@ -80,14 +80,14 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 popupFilter.show();
                 break;
             case R.id.button_search:
-                network.getProducts(VENDOR, editAutoSearch.getText().toString());
+                network.getProducts(vendor, editAutoSearch.getText().toString());
                 break;
             case R.id.button_cart_confirm:
                 cartObjects = cartModels;
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                network.getProducts(VENDOR);
+                network.getProducts(vendor);
                 break;
         }
     }
@@ -95,15 +95,15 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        network.getProducts(VENDOR);
+        network.getProducts(vendor);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getTitle().toString().equals("Clear")) {
-            network.getProducts(VENDOR);
+            network.getProducts(vendor);
         } else {
-            network.getProducts(VENDOR, editAutoSearch.getText().toString(), item.getTitle().toString());
+            network.getProducts(vendor, editAutoSearch.getText().toString(), item.getTitle().toString());
         }
         return true;
     }

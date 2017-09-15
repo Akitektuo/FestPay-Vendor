@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 
 public interface UserResponse {
 
-    void logIn();
+    void logIn(int vendorId, String vendorName);
 
     void passwordForgotten();
 

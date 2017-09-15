@@ -71,12 +71,11 @@ public class NetworkManager {
                 String url = HOST_USER + "logIn";
                 try {
                     final String json = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(new LoginModel(email, password));
-                    System.out.println(json);
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             if (Boolean.parseBoolean(response)) {
-                                getUserResponse().logIn();
+                                getUserResponse().logIn(1, "Pancake House");
                             } else {
                                 Toast.makeText(getContext(), "Wrong credentials.", Toast.LENGTH_SHORT).show();
                             }

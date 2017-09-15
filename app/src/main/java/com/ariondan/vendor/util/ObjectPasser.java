@@ -10,7 +10,8 @@ import java.util.List;
 
 public class ObjectPasser {
 
-    public static String VENDOR;
+    public static String vendor;
+    public static int id;
     public static List<CartModel> cartObjects;
 
 }
