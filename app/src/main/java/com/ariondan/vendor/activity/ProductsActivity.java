@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.grid.ProductAdapter;
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
+import static com.ariondan.vendor.util.ObjectPasser.VENDOR;
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
 
 
 public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
 
-    private static final String VENDOR = "Pancake House";
     private RecyclerView gridProducts;
     private RecyclerView listCart;
     private List<CartModel> cartModels;
@@ -88,9 +87,6 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                layoutCart.setVisibility(View.GONE);
-                productModels.clear();
-                cartModels.clear();
                 network.getProducts(VENDOR);
                 break;
         }
@@ -99,17 +95,13 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO clear this part and make it compatible with cancel order
-        layoutCart.setVisibility(View.GONE);
-        productModels.clear();
-        cartModels.clear();
         network.getProducts(VENDOR);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getTitle().toString().equals("Clear")) {
-            productModels.clear();
+            network.getProducts(VENDOR);
         } else {
             network.getProducts(VENDOR, editAutoSearch.getText().toString(), item.getTitle().toString());
         }
@@ -118,8 +110,10 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void loadProducts(List<ProductModel> productModels) {
+        layoutCart.setVisibility(View.GONE);
+        this.productModels.clear();
+        cartModels.clear();
         populatePopup(productModels);
-        Toast.makeText(this, "It connects with " + productModels.size() + " results", Toast.LENGTH_SHORT).show();
         for (ProductModel product : productModels) {
             this.productModels.add(product);
             if (gridProducts.getAdapter() != null) {
@@ -130,15 +124,16 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 
     private void populatePopup(List<ProductModel> productModels) {
         boolean misses;
+        popupFilter.getMenu().clear();
         for (ProductModel product : productModels) {
             misses = true;
             for (int i = 0; i < popupFilter.getMenu().size(); i++) {
-                if (popupFilter.getMenu().getItem(i).getTitle().toString().equals(product.getName())) {
+                if (popupFilter.getMenu().getItem(i).getTitle().toString().equals(product.getCategory())) {
                     misses = false;
                 }
             }
             if (misses) {
-                popupFilter.getMenu().add(product.getName());
+                popupFilter.getMenu().add(product.getCategory());
             }
         }
         popupFilter.getMenu().add("Clear");

@@ -20,6 +20,7 @@ import com.ariondan.vendor.R;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.ProductModel;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -57,17 +58,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(final ProductAdapter.ViewHolder holder, int position) {
         final ProductModel item = items.get(position);
         holder.textProduct.setText(item.getName());
-        holder.textPrice.setText(String.valueOf(item.getPrice()));
+        holder.textPrice.setText(new DecimalFormat("#.#").format(item.getPrice()));
 
-        //TODO: get image by name from network
         holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.loading));
         ImageRequest request = new ImageRequest(item.getImageURL(), new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 holder.imageProduct.setImageBitmap(response);
-                ProductModel model = items.get(holder.getAdapterPosition());
-                model.setImage(response);
-                items.set(holder.getAdapterPosition(), model);
+                try {
+                    ProductModel model = items.get(holder.getAdapterPosition());
+                    model.setImage(response);
+                    items.set(holder.getAdapterPosition(), model);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }, 0, 0, null, new Response.ErrorListener() {
             @Override
@@ -76,12 +80,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             }
         });
         queue.add(request);
-
-        //delete this part when introducing streaming
-//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
-//        if (item.getName().equals("Mici")) {
-//            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
-//        }
 
         View.OnClickListener clickAdd = new View.OnClickListener() {
             @Override

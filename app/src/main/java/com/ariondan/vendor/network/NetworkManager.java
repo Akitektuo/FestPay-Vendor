@@ -12,26 +12,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.LoginModel;
-import com.ariondan.vendor.model.ProductModel;
-import com.ariondan.vendor.model.ProductNetworkModel;
 import com.ariondan.vendor.model.TransactionModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /*
   Created by AoD Akitektuo on 03-Sep-17 at 19:45.
@@ -153,7 +145,7 @@ public class NetworkManager {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println(response);
+                getProductResponse().loadProducts(new ParserJSON(getContext()).convertJSONtoObject(response));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -169,12 +161,7 @@ public class NetworkManager {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
-                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getProductResponse().loadProducts(new ParserJSON(getContext()).convertJSONtoObject(response));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -191,12 +178,7 @@ public class NetworkManager {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
-                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getProductResponse().loadProducts(new ParserJSON(getContext()).convertJSONtoObject(response));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -221,8 +203,9 @@ public class NetworkManager {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    // TODO this will change with double
                     if (Boolean.parseBoolean(response)) {
-                        getTransactionResponse().onTransaction();
+                        getTransactionResponse().onTransaction(new Random().nextInt(9998) + 1);
                     } else {
                         Toast.makeText(getContext(), "Error occurred while making the transaction.", Toast.LENGTH_SHORT).show();
                     }

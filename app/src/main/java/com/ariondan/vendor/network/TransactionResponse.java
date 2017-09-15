@@ -6,6 +6,6 @@ package com.ariondan.vendor.network;
 
 public interface TransactionResponse {
 
-    void onTransaction();
+    void onTransaction(double credits);
 
 }
