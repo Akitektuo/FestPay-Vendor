@@ -116,9 +116,9 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         populatePopup(productModels);
         for (ProductModel product : productModels) {
             this.productModels.add(product);
-            if (gridProducts.getAdapter() != null) {
-                gridProducts.getAdapter().notifyDataSetChanged();
-            }
+        }
+        if (gridProducts.getAdapter() != null) {
+            gridProducts.getAdapter().notifyDataSetChanged();
         }
     }
 
