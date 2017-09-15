@@ -65,7 +65,6 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         listCart.setAdapter(new CartAdapter(this, cartModels));
         gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
-//        network.getProducts(VENDOR);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 popupFilter.show();
                 break;
             case R.id.button_search:
-//                network.getProducts(VENDOR, editAutoSearch.getText().toString());
+                network.getProducts(VENDOR, editAutoSearch.getText().toString());
                 break;
             case R.id.button_cart_confirm:
                 cartObjects = cartModels;
@@ -92,7 +91,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 layoutCart.setVisibility(View.GONE);
                 productModels.clear();
                 cartModels.clear();
-//                network.getProducts(VENDOR);
+                network.getProducts(VENDOR);
                 break;
         }
     }
@@ -100,10 +99,11 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        // TODO clear this part and make it compatible with cancel order
         layoutCart.setVisibility(View.GONE);
         productModels.clear();
         cartModels.clear();
-//                network.getProducts(VENDOR);
+        network.getProducts(VENDOR);
     }
 
     @Override

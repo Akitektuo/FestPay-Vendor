@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.model.CartModel;
@@ -21,10 +22,15 @@ import com.ariondan.vendor.model.ProductNetworkModel;
 import com.ariondan.vendor.model.TransactionModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -143,18 +149,11 @@ public class NetworkManager {
     }
 
     public void getProducts(String vendor) {
-        String url = HOST_PRODUCT + "products"; //?vendor=" + vendor.replaceAll(" ", "%20");
+        String url = HOST_PRODUCT + "vendor?vendor=" + vendor.replaceAll(" ", "%20");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
-                    List<ProductNetworkModel> productNetworkModels = new ObjectMapper().reader().readValue(response);
-                    System.out.println(response);
-                    System.out.println(new ObjectMapper().reader().readValue(response));
-                    getProductResponse().loadProducts(ProductModel.convertProducts(productNetworkModels));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                System.out.println(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -166,7 +165,7 @@ public class NetworkManager {
     }
 
     public void getProducts(String vendor, String search) {
-        String url = HOST_PRODUCT + "products?vendor=" + vendor + "&search=" + search;
+        String url = HOST_PRODUCT + "search?vendor=" + vendor.replaceAll(" ", "%20") + "&search=" + search.replaceAll(" ", "%20");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -187,7 +186,8 @@ public class NetworkManager {
     }
 
     public void getProducts(String vendor, String search, String category) {
-        String url = HOST_PRODUCT + "products?vendor=" + vendor + "&search=" + search + "&category=" + category;
+        String url = HOST_PRODUCT + "category?vendor=" + vendor.replaceAll(" ", "%20") + "&search="
+                + search.replaceAll(" ", "%20") + "&category=" + category.replaceAll(" ", "%20");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
