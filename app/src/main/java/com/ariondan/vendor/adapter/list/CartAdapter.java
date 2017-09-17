@@ -37,14 +37,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final CartAdapter.ViewHolder holder, int position) {
         CartModel item = items.get(position);
-        //TODO: get image by name from network
         holder.imageProduct.setImageBitmap(item.getImage());
-
-        //delete this part when introducing stream data
-//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
-//        if (item.getName().equals("Mici")) {
-//            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
-//        }
         holder.textProduct.setText(item.getName());
         holder.textPrice.setText(String.valueOf(item.getPrice()));
         holder.textQuantity.setText(String.format("x%d", item.getQuantity()));

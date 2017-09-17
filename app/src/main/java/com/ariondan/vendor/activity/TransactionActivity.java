@@ -47,7 +47,6 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
             Parcelable[] rawMessages = intent.getParcelableArrayExtra(
                     NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage message = (NdefMessage) rawMessages[0];
-//            textNfc.setText(new String(message.getRecords()[0].getPayload()));
             //example of message
             // "3_;_Mihnea_;_true"
             List<String> transferredData = Arrays.asList(new String(message.getRecords()[0].getPayload()).split("_;_"));

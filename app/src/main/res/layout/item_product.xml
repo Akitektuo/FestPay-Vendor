@@ -12,6 +12,7 @@
         android:id="@+id/image_item_product"
         android:layout_width="128dp"
         android:layout_height="128dp"
+
         android:layout_margin="16dp" />
 
     <LinearLayout

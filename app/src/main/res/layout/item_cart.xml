@@ -9,19 +9,21 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         android:background="@drawable/border_white"
-        android:gravity="center_vertical"
         android:padding="8dp">
 
         <ImageView
             android:id="@+id/image_item_cart"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/coca_cola" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/image_item_cart"
             android:orientation="vertical"
             android:paddingEnd="4dp">
 
