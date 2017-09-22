@@ -10,7 +10,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.list.HistoryAdapter;
-import com.ariondan.vendor.database.DatabaseHelper;
+import com.ariondan.vendor.local.database.DatabaseHelper;
 import com.ariondan.vendor.model.HistoryModel;
 
 import java.util.ArrayList;

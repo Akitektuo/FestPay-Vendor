@@ -20,4 +20,5 @@
     <string name="confirm">Confirm</string>
     <string name="clear">Clear</string>
     <string name="split">_,_</string>
+    <string name="service_name">CardEmulation</string>
 </resources>

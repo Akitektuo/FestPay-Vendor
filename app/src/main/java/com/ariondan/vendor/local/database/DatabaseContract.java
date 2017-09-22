@@ -1,4 +1,4 @@
-package com.ariondan.vendor.database;
+package com.ariondan.vendor.local.database;
 
 import android.provider.BaseColumns;
 

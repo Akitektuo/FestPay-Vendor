@@ -5,7 +5,7 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.ariondan.vendor.database.DatabaseHelper;
+import com.ariondan.vendor.local.database.DatabaseHelper;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.ariondan.vendor.database;
+package com.ariondan.vendor.local.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_CUSTOMER;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_ID;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_PICTURE;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_PRICE;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_PRODUCT;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_QUANTITY;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_TIME;
-import static com.ariondan.vendor.database.DatabaseContract.CURSOR_TOTAL_PRICE;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_CUSTOMER;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_ID;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PICTURE;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PRICE;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PRODUCT;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_QUANTITY;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_TIME;
+import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_TOTAL_PRICE;
 
 /**
  * Created by Akitektuo on 22.07.2017.

@@ -1,39 +1,45 @@
 package com.ariondan.vendor.activity;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.ariondan.vendor.R;
+import com.ariondan.vendor.local.preference.Preference;
 import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.UserResponse;
+import com.ariondan.vendor.nfc.CardService;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_USER;
-import static com.ariondan.vendor.util.ObjectPasser.id;
-import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, UserResponse {
 
     private MaterialEditText editEmail;
     private MaterialEditText editPassword;
     private NetworkManager network;
+    private Preference preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        preference = new Preference(this);
         editEmail = (MaterialEditText) findViewById(R.id.edit_login_email);
         editPassword = (MaterialEditText) findViewById(R.id.edit_login_password);
         findViewById(R.id.button_login).setOnClickListener(this);
         findViewById(R.id.text_forget_password).setOnClickListener(this);
 
         network = new NetworkManager(this, KEY_USER);
+
+        getPackageManager().setComponentEnabledSetting(new ComponentName(this, CardService.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 
     }
 
@@ -50,9 +56,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void logIn(int vendorId, String vendorName) {
-        id = vendorId;
-        vendor = vendorName;
+    public void logIn(int vendorId, String vendorShop) {
+        preference.setPreference(Preference.KEY_VENDOR_ID, vendorId);
+        preference.setPreference(Preference.KEY_VENDOR_SHOP, vendorShop);
         startActivity(new Intent(this, ProductsActivity.class));
         finish();
 
