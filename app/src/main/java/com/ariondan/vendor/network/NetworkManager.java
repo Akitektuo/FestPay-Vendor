@@ -2,7 +2,6 @@ package com.ariondan.vendor.network;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -11,7 +10,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.model.CartModel;
@@ -83,7 +81,7 @@ public class NetworkManager {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            sendErrorNetworkToUser();
                         }
                     }) {
                         @Override
@@ -130,6 +128,7 @@ public class NetworkManager {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        sendErrorNetworkToUser();
                     }
                 });
                 queue.add(stringRequest);
@@ -149,7 +148,23 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                sendErrorNetworkToUser();
+            }
+        });
+        queue.add(stringRequest);
+    }
 
+    public void getAllProducts(String vendor) {
+        String url = HOST_PRODUCT + "vendor?vendor=" + vendor.replaceAll(" ", "%20");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                getProductResponse().loadAllProducts(new ParserJSON(getContext()).convertJSONtoObject(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                sendErrorNetworkToUser();
             }
         });
         queue.add(stringRequest);
@@ -165,7 +180,7 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                sendErrorNetworkToUser();
             }
         });
         queue.add(stringRequest);
@@ -182,7 +197,7 @@ public class NetworkManager {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                sendErrorNetworkToUser();
             }
         });
         queue.add(stringRequest);
@@ -212,7 +227,7 @@ public class NetworkManager {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    sendErrorNetworkToUser();
                 }
             }) {
                 @Override
@@ -236,20 +251,8 @@ public class NetworkManager {
         }
     }
 
-    public void loadImageTest() {
-        String url = "http://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/taking_care_of_kitten_slideshow/photolibrary_rm_photo_of_kitten_in_grass.jpg";
-        ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                getUserResponse().loadImage(response);
-            }
-        }, 0, 0, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        queue.add(request);
+    private void sendErrorNetworkToUser() {
+        Toast.makeText(getContext(), "Please check your Wi-Fi connection.", Toast.LENGTH_SHORT).show();
     }
 
     private Context getContext() {

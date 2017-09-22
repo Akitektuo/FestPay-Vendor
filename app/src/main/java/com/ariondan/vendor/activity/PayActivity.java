@@ -42,7 +42,6 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         } else if (nfcAdapter.isEnabled()) {
             Toast.makeText(this, "Waiting for connectivity.", Toast.LENGTH_SHORT).show();
         } else {
-            //experimental
             Toast.makeText(this, "Please turn on NFC.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(android.provider.Settings.ACTION_NFC_SETTINGS));
             finish();

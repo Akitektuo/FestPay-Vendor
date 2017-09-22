@@ -12,4 +12,6 @@ public interface ProductResponse {
 
     void loadProducts(List<ProductModel> productModels);
 
+    void loadAllProducts(List<ProductModel> productModels);
+
 }

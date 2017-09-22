@@ -64,6 +64,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         listCart.setAdapter(new CartAdapter(this, cartModels));
         gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
+        network.getProducts(vendor);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                network.getProducts(vendor);
+                network.getAllProducts(vendor);
                 break;
         }
     }
@@ -95,7 +96,6 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        network.getProducts(vendor);
     }
 
     @Override
@@ -110,16 +110,22 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void loadProducts(List<ProductModel> productModels) {
+        network.getAllProducts(vendor);
         layoutCart.setVisibility(View.GONE);
         this.productModels.clear();
         cartModels.clear();
-        populatePopup(productModels);
         for (ProductModel product : productModels) {
             this.productModels.add(product);
         }
         if (gridProducts.getAdapter() != null) {
             gridProducts.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void loadAllProducts(List<ProductModel> productModels) {
+        editAutoSearch.setText("");
+        populatePopup(productModels);
     }
 
     private void populatePopup(List<ProductModel> productModels) {
