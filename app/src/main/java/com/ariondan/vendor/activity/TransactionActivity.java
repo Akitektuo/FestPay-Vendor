@@ -49,11 +49,17 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
             NdefMessage message = (NdefMessage) rawMessages[0];
             //example of message
             // "3_;_Mihnea_;_true"
-            List<String> transferredData = Arrays.asList(new String(message.getRecords()[0].getPayload()).split("_;_"));
-            if (Boolean.parseBoolean(transferredData.get(2))) {
-                doTransaction(Integer.parseInt(transferredData.get(0)), transferredData.get(1));
-            } else {
-                Toast.makeText(this, "Invalid device.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Transfered data: " + new String(message.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
+            try {
+                List<String> transferredData = Arrays.asList(new String(message.getRecords()[0].getPayload()).split("_;_"));
+                if (Boolean.parseBoolean(transferredData.get(2))) {
+                    doTransaction(Integer.parseInt(transferredData.get(0)), transferredData.get(1));
+                } else {
+                    Toast.makeText(this, "Invalid device.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error while parsing data", Toast.LENGTH_LONG).show();
             }
         }
     }

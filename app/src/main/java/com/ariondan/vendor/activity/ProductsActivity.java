@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.grid.ProductAdapter;
 import com.ariondan.vendor.adapter.list.CartAdapter;
+import com.ariondan.vendor.local.preference.Preference;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.ProductModel;
 import com.ariondan.vendor.network.NetworkManager;
@@ -39,6 +40,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     private PopupMenu popupFilter;
     private NetworkManager network;
     private AutoCompleteTextView editAutoSearch;
+    private Preference preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,8 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         listCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         listCart.setAdapter(new CartAdapter(this, cartModels));
         gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
-        network.getProducts(vendor);
+        preference = new Preference(this);
+        network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
     }
 
     @Override
@@ -81,14 +84,14 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 popupFilter.show();
                 break;
             case R.id.button_search:
-                network.getProducts(vendor, editAutoSearch.getText().toString());
+                network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP), editAutoSearch.getText().toString());
                 break;
             case R.id.button_cart_confirm:
                 cartObjects = cartModels;
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                network.getAllProducts(vendor);
+                network.getAllProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
                 break;
         }
     }
@@ -101,16 +104,16 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getTitle().toString().equals("Clear")) {
-            network.getProducts(vendor);
+            network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
         } else {
-            network.getProducts(vendor, editAutoSearch.getText().toString(), item.getTitle().toString());
+            network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP), editAutoSearch.getText().toString(), item.getTitle().toString());
         }
         return true;
     }
 
     @Override
     public void loadProducts(List<ProductModel> productModels) {
-        network.getAllProducts(vendor);
+        network.getAllProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
         layoutCart.setVisibility(View.GONE);
         this.productModels.clear();
         cartModels.clear();

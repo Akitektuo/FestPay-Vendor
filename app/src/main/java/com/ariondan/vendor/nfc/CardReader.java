@@ -3,6 +3,7 @@ package com.ariondan.vendor.nfc;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -40,6 +41,7 @@ public class CardReader implements NfcAdapter.ReaderCallback {
                 if (Arrays.equals(SELECT_OK_SW, statusWord)) {
                     String accountNumber = new String(payload, "UTF-8");
                     accountCallback.get().onAccountReceived(accountNumber);
+                    System.out.println("CardReader.onTagDiscovered");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
