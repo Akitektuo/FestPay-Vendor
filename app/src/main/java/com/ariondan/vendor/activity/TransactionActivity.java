@@ -2,9 +2,7 @@ package com.ariondan.vendor.activity;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,13 +20,11 @@ import java.util.Date;
 import java.util.List;
 
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
-import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
-public class TransactionActivity extends AppCompatActivity implements TransactionResponse, NfcAdapter.CreateNdefMessageCallback {
+public class TransactionActivity extends AppCompatActivity implements TransactionResponse {
 
     private List<CartModel> cartModels;
     private NetworkManager network;
-    private double credits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,30 +76,7 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
 
     @Override
     public void onTransaction(double credits) {
-        this.credits = credits;
-        NfcAdapter.getDefaultAdapter(this).setNdefPushMessageCallback(this, this);
         finish();
-    }
-
-    @Override
-    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String message = credits + "_;_" + codifyProducts() + "_;_" + vendor;
-        NdefRecord ndefRecord = NdefRecord.createMime("text/plain", message.getBytes());
-        return new NdefMessage(ndefRecord);
-    }
-
-    private String codifyProducts() {
-        StringBuilder builder = new StringBuilder();
-        for (CartModel x : cartModels) {
-            if (x != cartModels.get(0)) {
-                builder.append("__;__");
-            }
-            builder.append(x.getName()).append("___;___")
-                    .append(x.getPrice()).append("___;___")
-                    .append(x.getQuantity()).append("___;___")
-                    .append(x.getTotalPrice());
-        }
-        return builder.toString();
     }
 
 

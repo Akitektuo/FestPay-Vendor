@@ -6,9 +6,7 @@
     <RelativeLayout
         android:id="@+id/layout_products_actionbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp">
+        android:layout_height="wrap_content">
 
         <AutoCompleteTextView
             android:id="@+id/edit_auto_search"
@@ -64,6 +62,14 @@
         android:divider="@android:color/transparent"
         android:padding="16dp"
         android:scrollbars="none" />
+
+    <Button
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="32dp"
+        android:elevation="16dp" />
 
     <RelativeLayout
         android:id="@+id/layout_cart"

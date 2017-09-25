@@ -1,7 +1,9 @@
 package com.ariondan.vendor.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +29,6 @@ import java.util.List;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
-import static com.ariondan.vendor.util.ObjectPasser.vendor;
 
 
 public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
@@ -71,6 +72,27 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builderDelete = new AlertDialog.Builder(this);
+        builderDelete.setTitle("Do you want to exit?");
+        builderDelete.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+//                super.onBackPressed();
+            }
+        });
+        builderDelete.setNegativeButton("Log Out", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog dialogDelete = builderDelete.create();
+        dialogDelete.show();
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_logout:
@@ -88,10 +110,11 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.button_cart_confirm:
                 cartObjects = cartModels;
+                network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
                 startActivity(new Intent(this, PayActivity.class));
                 break;
             case R.id.button_cart_clear:
-                network.getAllProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
+                network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
                 break;
         }
     }
