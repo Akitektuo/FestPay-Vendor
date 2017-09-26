@@ -2,11 +2,17 @@ package com.ariondan.vendor.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ariondan.vendor.R;
 import com.ariondan.vendor.adapter.list.HistoryAdapter;
@@ -22,6 +28,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private List<HistoryModel> historyModels;
     private DatabaseHelper database;
     private RecyclerView listHistory;
+    private RelativeLayout layoutContainerSearch;
+    private Button buttonSearch;
+    private boolean isSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +38,32 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_history);
         database = new DatabaseHelper(this);
         editAutoSearch = (AutoCompleteTextView) findViewById(R.id.edit_search_history);
+        editAutoSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    searchInHistory();
+                    return true;
+                }
+                return false;
+            }
+        });
+        isSearch = false;
+        layoutContainerSearch = (RelativeLayout) findViewById(R.id.layout_container_search_history);
+        layoutContainerSearch.setVisibility(View.GONE);
         listHistory = (RecyclerView) findViewById(R.id.list_history);
-        listHistory.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(listHistory.getContext(),
+                layoutManager.getOrientation());
+        listHistory.addItemDecoration(dividerItemDecoration);
+        listHistory.setLayoutManager(layoutManager);
         historyModels = database.getHistoryForSearch(editAutoSearch.getText().toString());
         listHistory.setAdapter(new HistoryAdapter(this, historyModels));
         setSearchSuggestions();
         findViewById(R.id.button_history_back).setOnClickListener(this);
-        findViewById(R.id.button_search_history).setOnClickListener(this);
+        buttonSearch = (Button) findViewById(R.id.button_search_history);
+        buttonSearch.setOnClickListener(this);
+        findViewById(R.id.button_clear_search_history).setOnClickListener(this);
     }
 
     private void setSearchSuggestions() {
@@ -64,7 +92,18 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.button_search_history:
-                searchInHistory();
+                if (isSearch) {
+                    layoutContainerSearch.setVisibility(View.GONE);
+                    editAutoSearch.setText("");
+                    buttonSearch.setBackground(getResources().getDrawable(R.drawable.search));
+                } else {
+                    layoutContainerSearch.setVisibility(View.VISIBLE);
+                    buttonSearch.setBackground(getResources().getDrawable(R.drawable.search_cancel));
+                }
+                isSearch = !isSearch;
+                break;
+            case R.id.button_clear_search_history:
+                editAutoSearch.setText("");
                 break;
         }
     }

@@ -8,34 +8,62 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp">
+        android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/edit_search_history"
+        <RelativeLayout
+            android:id="@+id/layout_container_search_history"
             android:layout_width="256dp"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_centerInParent="true"
-            android:gravity="center"
-            android:hint="@string/search"
-            android:imeOptions="actionDone"
-            android:textColorHint="@color/gray" />
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button_clear_search_history"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/cancel" />
+
+            <AutoCompleteTextView
+                android:id="@+id/edit_search_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/button_clear_search_history"
+                android:backgroundTint="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/search"
+                android:imeOptions="actionSearch"
+                android:textColor="@color/black"
+                android:textColorHint="@color/silver" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/silverLight" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button_search_history"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_margin="10dp"
-            android:layout_toEndOf="@id/edit_search_history"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
             android:background="@drawable/search" />
 
         <Button
             android:id="@+id/button_history_back"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_margin="10dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
             android:background="@drawable/back" />
+
+        <!--Replace with light button-->
 
     </RelativeLayout>
 
@@ -52,7 +80,7 @@
             android:gravity="center"
             android:text="@string/order"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -62,7 +90,7 @@
             android:gravity="center"
             android:text="@string/imageName"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -72,7 +100,7 @@
             android:gravity="center"
             android:text="@string/name"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -82,7 +110,7 @@
             android:gravity="center"
             android:text="@string/quantity"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -92,7 +120,7 @@
             android:gravity="center"
             android:text="@string/price"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -102,7 +130,7 @@
             android:gravity="center"
             android:text="@string/customer"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
         <TextView
@@ -112,7 +140,7 @@
             android:gravity="center"
             android:text="@string/date"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/silverDark"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -120,7 +148,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/silverLight" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_history"

@@ -1,10 +1,8 @@
 package com.ariondan.vendor.activity;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import com.ariondan.vendor.R;
 import com.ariondan.vendor.local.preference.Preference;
 import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.UserResponse;
-import com.ariondan.vendor.nfc.CardService;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_USER;
@@ -38,9 +35,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.text_forget_password).setOnClickListener(this);
 
         network = new NetworkManager(this, KEY_USER);
-
-        getPackageManager().setComponentEnabledSetting(new ComponentName(this, CardService.class), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
     }
 
     @Override

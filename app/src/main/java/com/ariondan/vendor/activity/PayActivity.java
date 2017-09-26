@@ -3,7 +3,6 @@ package com.ariondan.vendor.activity;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,8 +26,8 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ImageView imageNfc = (ImageView) findViewById(R.id.image_pay_nfc);
         ImageView imageBackground = (ImageView) findViewById(R.id.image_pay_background);
-        WaveDrawable waveDrawable = new WaveDrawable(getResources().getColor(R.color.colorPrimary), 500);
-        WaveDrawable waveBackground = new WaveDrawable(getResources().getColor(R.color.colorPrimary), 1000);
+        WaveDrawable waveDrawable = new WaveDrawable(getResources().getColor(R.color.blue), 500);
+        WaveDrawable waveBackground = new WaveDrawable(getResources().getColor(R.color.blue), 1000);
         imageNfc.setBackgroundDrawable(waveDrawable);
         imageBackground.setBackgroundDrawable(waveBackground);
         waveDrawable.setWaveInterpolator(new AccelerateDecelerateInterpolator());

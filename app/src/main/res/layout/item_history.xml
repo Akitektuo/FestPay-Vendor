@@ -11,7 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.17"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@color/silver" />
 
     <ImageView
         android:id="@+id/image_history_product"
@@ -23,7 +24,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.17"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@color/silver" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -36,13 +38,15 @@
             android:id="@+id/text_history_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textColor="@color/silver" />
 
         <TextView
             android:id="@+id/text_history_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textColor="@color/silver" />
 
     </LinearLayout>
 
@@ -51,20 +55,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.17"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@color/silver" />
 
     <TextView
         android:id="@+id/text_history_customer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.17"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@color/silver" />
 
     <TextView
         android:id="@+id/text_history_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.17"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@color/silver" />
 
 </LinearLayout>

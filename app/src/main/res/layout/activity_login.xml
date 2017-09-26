@@ -52,7 +52,7 @@
         android:background="@drawable/corners_blue"
         android:text="@string/login"
         android:textAllCaps="false"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/text_forget_password"
