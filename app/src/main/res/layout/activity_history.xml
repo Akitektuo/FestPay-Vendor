@@ -34,7 +34,7 @@
                 android:backgroundTint="@android:color/transparent"
                 android:gravity="center"
                 android:hint="@string/search"
-                android:imeOptions="actionSearch"
+                android:imeOptions="actionSearch|flagNoExtractUi"
                 android:textColor="@color/black"
                 android:textColorHint="@color/silver" />
 
@@ -71,7 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingStart="16dp"
+        android:paddingBottom="4dp"
+        android:paddingEnd="16dp">
 
         <TextView
             android:layout_width="0dp"

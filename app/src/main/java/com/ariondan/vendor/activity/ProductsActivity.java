@@ -1,5 +1,6 @@
 package com.ariondan.vendor.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -35,7 +37,7 @@ import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
 import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
 
 
-public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse {
+public class ProductsActivity extends AppCompatActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ProductResponse, ProductAdapter.OnClickItemListener, CartAdapter.OnClickItemListener {
 
     private RecyclerView gridProducts;
     private RecyclerView listCart;
@@ -50,6 +52,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
     private Button buttonSearch;
     private boolean isSearch;
     private boolean isExit;
+    private int totalItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         cartModels = new ArrayList<>();
         productModels = new ArrayList<>();
         network = new NetworkManager(this, KEY_PRODUCT);
-        gridProducts.setLayoutManager(new GridLayoutManager(this, 3));
+        gridProducts.setLayoutManager(new GridLayoutManager(this, 4));
         LinearLayoutManager layoutManagerCart = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         listCart.setLayoutManager(layoutManagerCart);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(listCart.getContext(),
@@ -137,9 +140,11 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                     layoutContainerSearch.setVisibility(View.GONE);
                     editAutoSearch.setText("");
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search));
+                    hideKeyboard();
                 } else {
                     layoutContainerSearch.setVisibility(View.VISIBLE);
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search_cancel));
+                    editAutoSearch.requestFocus();
                 }
                 isSearch = !isSearch;
                 break;
@@ -179,6 +184,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         layoutCart.setVisibility(View.GONE);
         this.productModels.clear();
         cartModels.clear();
+        totalItems = 0;
         for (ProductModel product : productModels) {
             this.productModels.add(product);
         }
@@ -207,6 +213,55 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         popupFilter.getMenu().add("Clear");
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onClickItem(ProductModel product) {
+        CartModel cartModelRequest = new CartModel(product.getId(), product.getImage(), product.getName(), product.getPrice(), 1, product.getPrice(), product);
+        for (CartModel x : cartModels) {
+            if (x.getId() == cartModelRequest.getId()) {
+                cartModelRequest = x;
+                cartModelRequest.setQuantity(x.getQuantity() + 1);
+                cartModelRequest.setTotalPrice(x.getPrice() * x.getQuantity());
+                cartModels.remove(x);
+                break;
+            }
+        }
+        cartModels.add(cartModelRequest);
+        listCart.getAdapter().notifyDataSetChanged();
+        totalItems++;
+        if (totalItems < 2) {
+            layoutCart.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onClickItem(CartModel product) {
+        CartModel cartModelRequest = product;
+        for (CartModel x : cartModels) {
+            if (x.getId() == cartModelRequest.getId()) {
+                cartModelRequest = x;
+                cartModelRequest.setQuantity(x.getQuantity() - 1);
+                cartModelRequest.setTotalPrice(x.getPrice() * x.getQuantity());
+                cartModels.remove(x);
+                if (cartModelRequest.getQuantity() > 0) {
+                    cartModels.add(cartModelRequest);
+                }
+                break;
+            }
+        }
+        listCart.getAdapter().notifyDataSetChanged();
+        totalItems--;
+        if (totalItems == 0) {
+            layoutCart.setVisibility(View.GONE);
+        }
     }
 }
 

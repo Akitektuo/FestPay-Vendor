@@ -1,5 +1,6 @@
 package com.ariondan.vendor.adapter.grid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -36,15 +37,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     private RecyclerView listCart;
     private int totalItems;
     private RequestQueue queue;
+    private OnClickItemListener clickListener;
 
-    public ProductAdapter(Context context, RecyclerView listCart, RelativeLayout layoutCart, List<ProductModel> objects, List<CartModel> cartModels) {
-        this.context = context;
+    public ProductAdapter(Activity activity, RecyclerView listCart, RelativeLayout layoutCart, List<ProductModel> objects, List<CartModel> cartModels) {
+        this.context = activity;
         this.layoutCart = layoutCart;
         items = objects;
         totalItems = 0;
         this.cartModels = cartModels;
         this.listCart = listCart;
-        queue = Volley.newRequestQueue(context);
+        queue = Volley.newRequestQueue(activity);
+        clickListener = (OnClickItemListener) activity;
     }
 
     @Override
@@ -80,6 +83,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             }
         });
         queue.add(request);
+
+        holder.layoutProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onClickItem(item);
+            }
+        });
 
         View.OnClickListener clickAdd = new View.OnClickListener() {
             @Override
@@ -128,12 +138,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             return;
         }
         if (count == 1) {
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
             listCart.getAdapter().notifyDataSetChanged();
         } else {
             int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
             cartModels.remove(index);
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
             listCart.getAdapter().notifyDataSetChanged();
         }
     }
@@ -156,7 +166,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         } else {
             int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
             cartModels.remove(index);
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count));
+            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
             listCart.getAdapter().notifyDataSetChanged();
         }
     }
@@ -189,6 +199,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             textCount = (TextView) view.findViewById(R.id.text_item_product_count);
             textPlus = (TextView) view.findViewById(R.id.text_item_product_plus);
         }
+    }
+
+    public interface OnClickItemListener {
+        void onClickItem(ProductModel product);
     }
 
 }

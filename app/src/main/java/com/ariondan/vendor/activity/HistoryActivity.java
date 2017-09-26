@@ -1,5 +1,6 @@
 package com.ariondan.vendor.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -96,15 +98,24 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     layoutContainerSearch.setVisibility(View.GONE);
                     editAutoSearch.setText("");
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search));
+                    hideKeyboard();
                 } else {
                     layoutContainerSearch.setVisibility(View.VISIBLE);
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search_cancel));
+                    editAutoSearch.requestFocus();
                 }
                 isSearch = !isSearch;
                 break;
             case R.id.button_clear_search_history:
                 editAutoSearch.setText("");
                 break;
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 }
