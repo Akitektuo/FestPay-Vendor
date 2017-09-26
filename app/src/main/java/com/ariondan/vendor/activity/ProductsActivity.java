@@ -95,7 +95,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 layoutManagerCart.getOrientation());
         listCart.addItemDecoration(dividerItemDecoration);
         listCart.setAdapter(new CartAdapter(this, cartModels));
-        gridProducts.setAdapter(new ProductAdapter(this, listCart, (RelativeLayout) findViewById(R.id.layout_cart), productModels, cartModels));
+        gridProducts.setAdapter(new ProductAdapter(this, productModels));
         preference = new Preference(this);
         network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
     }

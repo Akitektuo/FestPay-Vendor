@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -18,7 +17,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.ariondan.vendor.R;
-import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.ProductModel;
 
 import java.text.DecimalFormat;
@@ -32,20 +30,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     private Context context;
     private List<ProductModel> items;
-    private List<CartModel> cartModels;
-    private RelativeLayout layoutCart;
-    private RecyclerView listCart;
-    private int totalItems;
     private RequestQueue queue;
     private OnClickItemListener clickListener;
 
-    public ProductAdapter(Activity activity, RecyclerView listCart, RelativeLayout layoutCart, List<ProductModel> objects, List<CartModel> cartModels) {
+    public ProductAdapter(Activity activity, List<ProductModel> objects) {
         this.context = activity;
-        this.layoutCart = layoutCart;
         items = objects;
-        totalItems = 0;
-        this.cartModels = cartModels;
-        this.listCart = listCart;
         queue = Volley.newRequestQueue(activity);
         clickListener = (OnClickItemListener) activity;
     }
@@ -90,41 +80,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 clickListener.onClickItem(item);
             }
         });
-
-        View.OnClickListener clickAdd = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int count = Integer.parseInt(holder.textCount.getText().toString());
-                holder.textCount.setText(String.valueOf(count + 1));
-                layoutCart.setVisibility(View.VISIBLE);
-                totalItems++;
-                try {
-                    addItems(count, item);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        holder.imageProduct.setOnClickListener(clickAdd);
-        holder.textMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int count = Integer.parseInt(holder.textCount.getText().toString());
-                if (count > 0) {
-                    holder.textCount.setText(String.valueOf(count - 1));
-                    totalItems--;
-                    if (totalItems == 0) {
-                        layoutCart.setVisibility(View.GONE);
-                    }
-                    try {
-                        removeItems(count, item);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        holder.textPlus.setOnClickListener(clickAdd);
     }
 
     @Override
@@ -132,52 +87,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         return items.size();
     }
 
-    private void addItems(int count, ProductModel productModel) throws Exception {
-        count++;
-        if (count < 1) {
-            return;
-        }
-        if (count == 1) {
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
-            listCart.getAdapter().notifyDataSetChanged();
-        } else {
-            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
-            cartModels.remove(index);
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
-            listCart.getAdapter().notifyDataSetChanged();
-        }
-    }
-
-    private void removeItems(int count, ProductModel productModel) throws Exception {
-        count--;
-        if (count < 0) {
-            return;
-        }
-        if (count == 0) {
-            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
-            cartModels.remove(index);
-            try {
-                listCart.removeViewAt(index);
-                listCart.getAdapter().notifyItemRemoved(index);
-                listCart.getAdapter().notifyItemRangeChanged(index, cartModels.size());
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-        } else {
-            int index = cartModels.indexOf(getCartModelForId(productModel.getId()));
-            cartModels.remove(index);
-            cartModels.add(new CartModel(productModel.getId(), productModel.getImage(), productModel.getName(), productModel.getPrice(), count, productModel.getPrice() * count, productModel));
-            listCart.getAdapter().notifyDataSetChanged();
-        }
-    }
-
-    private CartModel getCartModelForId(int id) {
-        for (CartModel x : cartModels) {
-            if (x.getId() == id) {
-                return x;
-            }
-        }
-        return null;
+    public interface OnClickItemListener {
+        void onClickItem(ProductModel product);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -185,9 +96,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         TextView textProduct;
         TextView textPrice;
         ImageView imageProduct;
-        TextView textMinus;
-        TextView textCount;
-        TextView textPlus;
 
         ViewHolder(View view) {
             super(view);
@@ -195,14 +103,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             textProduct = (TextView) view.findViewById(R.id.text_item_product_name);
             textPrice = (TextView) view.findViewById(R.id.text_item_product_price);
             imageProduct = (ImageView) view.findViewById(R.id.image_item_product);
-            textMinus = (TextView) view.findViewById(R.id.text_item_product_minus);
-            textCount = (TextView) view.findViewById(R.id.text_item_product_count);
-            textPlus = (TextView) view.findViewById(R.id.text_item_product_plus);
         }
-    }
-
-    public interface OnClickItemListener {
-        void onClickItem(ProductModel product);
     }
 
 }
