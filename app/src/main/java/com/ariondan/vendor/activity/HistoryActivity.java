@@ -62,7 +62,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         listHistory.setLayoutManager(layoutManager);
         historyModels = database.getHistoryForSearch(editAutoSearch.getText().toString());
         listHistory.setAdapter(new HistoryAdapter(this, historyModels));
-        setSearchSuggestions();
+//        setSearchSuggestions();
         findViewById(R.id.button_history_back).setOnClickListener(this);
         buttonSearch = (Button) findViewById(R.id.button_search_history);
         buttonSearch.setOnClickListener(this);
