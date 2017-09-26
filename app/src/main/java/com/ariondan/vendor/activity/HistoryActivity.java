@@ -45,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     searchInHistory();
+                    hideKeyboard();
                     return true;
                 }
                 return false;
@@ -99,6 +100,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     editAutoSearch.setText("");
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search));
                     hideKeyboard();
+                    searchInHistory();
                 } else {
                     layoutContainerSearch.setVisibility(View.VISIBLE);
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search_cancel));

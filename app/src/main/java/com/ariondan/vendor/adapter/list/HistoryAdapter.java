@@ -38,16 +38,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(HistoryAdapter.ViewHolder holder, int position) {
         HistoryModel item = items.get(position);
         holder.textNumber.setText(String.format("%d.", item.getId()));
-
-        //TODO: get image by name from internal storage
-        holder.imageProduct.setImageBitmap(item.getImage());
-
-        //delete this part when introducing local db
-//        holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.coca_cola));
-//        if (item.getProduct().equals("Mici")) {
-//            holder.imageProduct.setImageDrawable(context.getResources().getDrawable(R.drawable.mici));
-//        }
-
         holder.textProduct.setText(item.getProduct());
         holder.textPrice.setText(String.valueOf(item.getPrice()));
         holder.textQuantity.setText(String.format("x%d", item.getQuantity()));
@@ -63,7 +53,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView textNumber;
-        ImageView imageProduct;
         TextView textProduct;
         TextView textPrice;
         TextView textQuantity;
@@ -74,7 +63,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         ViewHolder(View view) {
             super(view);
             textNumber = (TextView) view.findViewById(R.id.text_history_number);
-            imageProduct = (ImageView) view.findViewById(R.id.image_history_product);
             textProduct = (TextView) view.findViewById(R.id.text_history_product);
             textPrice = (TextView) view.findViewById(R.id.text_history_price);
             textQuantity = (TextView) view.findViewById(R.id.text_history_quantity);

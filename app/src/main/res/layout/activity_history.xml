@@ -35,6 +35,7 @@
                 android:gravity="center"
                 android:hint="@string/search"
                 android:imeOptions="actionSearch|flagNoExtractUi"
+                android:inputType="text"
                 android:textColor="@color/black"
                 android:textColorHint="@color/silver" />
 
@@ -71,14 +72,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
         android:paddingBottom="4dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/order"
             android:textAllCaps="true"
@@ -88,17 +89,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
-            android:gravity="center"
-            android:text="@string/imageName"
-            android:textAllCaps="true"
-            android:textColor="@color/silverDark"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/name"
             android:textAllCaps="true"
@@ -108,7 +99,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/quantity"
             android:textAllCaps="true"
@@ -118,7 +109,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/price"
             android:textAllCaps="true"
@@ -128,7 +119,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/customer"
             android:textAllCaps="true"
@@ -138,7 +129,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.14"
+            android:layout_weight="0.17"
             android:gravity="center"
             android:text="@string/date"
             android:textAllCaps="true"
@@ -160,7 +151,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:scrollbars="none" />
 
 </LinearLayout>

@@ -16,7 +16,6 @@ import java.util.List;
 
 import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_CUSTOMER;
 import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_ID;
-import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PICTURE;
 import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PRICE;
 import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_PRODUCT;
 import static com.ariondan.vendor.local.database.DatabaseContract.CURSOR_QUANTITY;
@@ -35,7 +34,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_QUERY = "CREATE TABLE " + DatabaseContract.HistoryContractEntry.TABLE_NAME + " (" +
             DatabaseContract.HistoryContractEntry.COLUMN_ID + " NUMBER," +
-            DatabaseContract.HistoryContractEntry.COLUMN_PICTURE + " TEXT," +
             DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT + " TEXT," +
             DatabaseContract.HistoryContractEntry.COLUMN_PRICE + " TEXT," +
             DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY + " NUMBER," +
@@ -57,10 +55,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addHistory(String picture, String product, double price, int quantity, double totalPrice, String customer, Date time) {
+    public void addHistory(String product, double price, int quantity, double totalPrice, String customer, Date time) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseContract.HistoryContractEntry.COLUMN_ID, getGeneratedId());
-        contentValues.put(DatabaseContract.HistoryContractEntry.COLUMN_PICTURE, picture);
         contentValues.put(DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT, product);
         contentValues.put(DatabaseContract.HistoryContractEntry.COLUMN_PRICE, String.valueOf(price));
         contentValues.put(DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY, quantity);
@@ -72,7 +69,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<HistoryModel> getHistory() {
         String[] list = {DatabaseContract.HistoryContractEntry.COLUMN_ID,
-                DatabaseContract.HistoryContractEntry.COLUMN_PICTURE,
                 DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT,
                 DatabaseContract.HistoryContractEntry.COLUMN_PRICE,
                 DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY,
@@ -88,12 +84,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private int getGeneratedId() {
-        return getHistory().size();
+        return getHistory().size() + 1;
     }
 
     public List<HistoryModel> getHistoryForSearch(String searchField) {
         String[] results = {DatabaseContract.HistoryContractEntry.COLUMN_ID,
-                DatabaseContract.HistoryContractEntry.COLUMN_PICTURE,
                 DatabaseContract.HistoryContractEntry.COLUMN_PRODUCT,
                 DatabaseContract.HistoryContractEntry.COLUMN_PRICE,
                 DatabaseContract.HistoryContractEntry.COLUMN_QUANTITY,
@@ -117,7 +112,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 historyModels.add(new HistoryModel(cursor.getInt(CURSOR_ID),
-                        cursor.getString(CURSOR_PICTURE),
                         cursor.getString(CURSOR_PRODUCT),
                         Double.parseDouble(cursor.getString(CURSOR_PRICE)),
                         cursor.getInt(CURSOR_QUANTITY),

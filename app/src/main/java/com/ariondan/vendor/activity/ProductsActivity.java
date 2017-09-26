@@ -26,11 +26,13 @@ import com.ariondan.vendor.adapter.grid.ProductAdapter;
 import com.ariondan.vendor.adapter.list.CartAdapter;
 import com.ariondan.vendor.local.preference.Preference;
 import com.ariondan.vendor.model.CartModel;
+import com.ariondan.vendor.model.HistoryModel;
 import com.ariondan.vendor.model.ProductModel;
 import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.ProductResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.ariondan.vendor.network.NetworkManager.KEY_PRODUCT;
@@ -73,6 +75,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP), editAutoSearch.getText().toString());
+                    hideKeyboard();
                     return true;
                 }
                 return false;
@@ -138,9 +141,11 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.button_search:
                 if (isSearch) {
                     layoutContainerSearch.setVisibility(View.GONE);
+                    network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
                     editAutoSearch.setText("");
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search));
                     hideKeyboard();
+
                 } else {
                     layoutContainerSearch.setVisibility(View.VISIBLE);
                     buttonSearch.setBackground(getResources().getDrawable(R.drawable.search_cancel));
@@ -152,7 +157,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
                 editAutoSearch.setText("");
                 break;
             case R.id.button_cart_confirm:
-                cartObjects = cartModels;
+                codifyProducts();
                 network.getProducts(preference.getPreferenceString(Preference.KEY_VENDOR_SHOP));
                 startActivity(new Intent(this, PayActivity.class));
                 break;
@@ -224,7 +229,7 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClickItem(ProductModel product) {
-        CartModel cartModelRequest = new CartModel(product.getId(), product.getImage(), product.getName(), product.getPrice(), 1, product.getPrice(), product);
+        CartModel cartModelRequest = new CartModel(product.getId(), product.getImage(), product.getName(), product.getPrice(), 1, product.getPrice());
         for (CartModel x : cartModels) {
             if (x.getId() == cartModelRequest.getId()) {
                 cartModelRequest = x;
@@ -262,6 +267,20 @@ public class ProductsActivity extends AppCompatActivity implements View.OnClickL
         if (totalItems == 0) {
             layoutCart.setVisibility(View.GONE);
         }
+    }
+
+    private void codifyProducts() {
+        StringBuilder builder = new StringBuilder();
+        for (CartModel x : cartModels) {
+            if (x != cartModels.get(0)) {
+                builder.append("__;__");
+            }
+            builder.append(x.getName()).append("_;_")
+                    .append(x.getPrice()).append("_;_")
+                    .append(x.getQuantity()).append("_;_")
+                    .append(x.getTotalPrice());
+        }
+        preference.setPreference(Preference.KEY_NFC_DATA, builder.toString());
     }
 }
 

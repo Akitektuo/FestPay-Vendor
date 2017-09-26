@@ -14,16 +14,14 @@ public class CartModel {
     private double price;
     private int quantity;
     private double totalPrice;
-    private ProductModel product;
 
-    public CartModel(int id, Bitmap image, String name, double price, int quantity, double totalPrice, ProductModel product) {
+    public CartModel(int id, Bitmap image, String name, double price, int quantity, double totalPrice) {
         setId(id);
         setImage(image);
         setName(name);
         setPrice(price);
         setQuantity(quantity);
         setTotalPrice(totalPrice);
-        setProduct(product);
     }
 
     public int getId() {
@@ -72,13 +70,5 @@ public class CartModel {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public ProductModel getProduct() {
-        return product;
-    }
-
-    public void setProduct(ProductModel product) {
-        this.product = product;
     }
 }

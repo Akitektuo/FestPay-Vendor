@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/blue"
     android:gravity="center"
     tools:context="com.ariondan.vendor.activity.TransactionActivity">
 
     <ProgressBar
-        android:layout_width="128dp"
-        android:layout_height="128dp" />
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:background="@xml/progress"/>
 
 </RelativeLayout>

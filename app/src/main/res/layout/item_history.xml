@@ -14,11 +14,6 @@
         android:gravity="center"
         android:textColor="@color/silver" />
 
-    <ImageView
-        android:id="@+id/image_history_product"
-        android:layout_width="64dp"
-        android:layout_height="64dp" />
-
     <TextView
         android:id="@+id/text_history_product"
         android:layout_width="0dp"

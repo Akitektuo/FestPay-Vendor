@@ -4,35 +4,38 @@ import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ariondan.vendor.R;
+import com.ariondan.vendor.local.preference.Preference;
 import com.ariondan.vendor.model.CartModel;
 import com.ariondan.vendor.model.HistoryModel;
 import com.ariondan.vendor.network.NetworkManager;
 import com.ariondan.vendor.network.TransactionResponse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.ariondan.vendor.util.ObjectPasser.cartObjects;
-
 public class TransactionActivity extends AppCompatActivity implements TransactionResponse {
 
-    private List<CartModel> cartModels;
     private NetworkManager network;
+    private Preference preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         network = new NetworkManager(this, NetworkManager.KEY_TRANSACTION);
-        cartModels = cartObjects;
+        preference = new Preference(this);
+
     }
 
     @Override
@@ -45,7 +48,6 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
             NdefMessage message = (NdefMessage) rawMessages[0];
             //example of message
             // "3_;_Mihnea_;_true"
-            Toast.makeText(this, "Transfered data: " + new String(message.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
             try {
                 List<String> transferredData = Arrays.asList(new String(message.getRecords()[0].getPayload()).split("_;_"));
                 if (Boolean.parseBoolean(transferredData.get(2))) {
@@ -61,8 +63,14 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
     }
 
     private void doTransaction(int userId, String userName) {
-        for (CartModel product : cartModels) {
-            new HistoryModel(this, product.getImage(), product.getName(), product.getPrice(), product.getQuantity(), product.getTotalPrice(), userName, new Date());
+        System.out.println(preference.getPreferenceString(Preference.KEY_NFC_DATA));
+        List<CartModel> cartModels = new ArrayList<>();
+        List<String> products = Arrays.asList(preference.getPreferenceString(Preference.KEY_NFC_DATA).split("__;__"));
+        for (String x : products) {
+            System.out.println(x);
+            List<String> items = Arrays.asList(x.split("_;_"));
+            new HistoryModel(this, items.get(0), Double.parseDouble(items.get(1)), Integer.parseInt(items.get(2)), Double.parseDouble(items.get(3)), userName, new Date());
+
         }
 
         //connect server to send transaction details
@@ -76,7 +84,12 @@ public class TransactionActivity extends AppCompatActivity implements Transactio
 
     @Override
     public void onTransaction(double credits) {
-        finish();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 3000);
     }
 
 

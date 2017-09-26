@@ -33,18 +33,14 @@ public class HistoryModel {
 
     private Context context;
 
-    public HistoryModel(Context context, Bitmap image, String product, double price, int quantity, double totalPrice, String customer, Date time) {
+    public HistoryModel(Context context, String product, double price, int quantity, double totalPrice, String customer, Date time) {
         setContext(context);
         DatabaseHelper database = new DatabaseHelper(context);
-        String imageName = "image" + database.getHistory().size();
-        setImage(image);
-        saveImage(imageName);
-        database.addHistory(imageName, product, price, quantity, totalPrice, customer, time);
+        database.addHistory(product, price, quantity, totalPrice, customer, time);
     }
 
-    public HistoryModel(int id, String imageName, String product, double price, int quantity, double totalPrice, String customer, Date time) {
+    public HistoryModel(int id, String product, double price, int quantity, double totalPrice, String customer, Date time) {
         setId(id);
-        setImage(getImage(imageName));
         setProduct(product);
         setPrice(price);
         setQuantity(quantity);
